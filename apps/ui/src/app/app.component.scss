@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.overlay-dynamic-text {
+  font-size: clamp(1rem, 8vw, 15rem);
+  white-space: nowrap;
+}
+

@@ -1,0 +1,30 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@known-unknowns-multiple-exemplar-experiment/ng-mat-service-worker": [
+        "libs/ng/mat-service-worker/src/index.ts"
+      ],
+      "@known-unknowns-multiple-exemplar-experiment/ng/mat-snack-bar": [
+        "libs/ng/mat-snack-bar/src/index.ts"
+      ],
+      "@known-unknowns-multiple-exemplar-experiment/ng/ui-auto-focus-directive": [
+        "libs/ng/ui-auto-focus-directive/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

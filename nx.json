@@ -1,0 +1,48 @@
+{
+  "npmScope": "known-unknowns-multiple-exemplar-experiment",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "implicitDependencies": {
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    ".eslintrc.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "ODY5OWQwM2MtMGNhZC00NGJmLWJjZDItNWJkNjI2MTg4YjYzfHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
+  },
+  "projects": {
+    "ng-mat-service-worker": {
+      "tags": []
+    },
+    "ng-mat-snack-bar": {
+      "tags": []
+    },
+    "ng-ui-auto-focus-directive": {
+      "tags": []
+    },
+    "ui": {
+      "tags": []
+    },
+    "ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ui"]
+    }
+  }
+}
