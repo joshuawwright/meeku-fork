@@ -1,4 +1,4 @@
 export const environment = {
-  baseUrl: 'https://www.meeku.io',
+  baseUrl: 'https://training.meeku.io',
   production: true
 };
