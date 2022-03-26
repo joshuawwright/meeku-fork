@@ -66,9 +66,6 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
       }
     }
 
-    const test = trials.map(trial => `${trial.stimuli[0].toString()}:${trial.stimuli[1].toString()}`);
-    console.log(test);
-
     return trials;
   }
 
