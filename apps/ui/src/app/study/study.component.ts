@@ -6,16 +6,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
 import {
-  BlockButtonDialogComponent, BlockButtonDialogData
+  BlockButtonDialogComponent, BlockButtonDialogData,
 } from '../block/block-button-dialog/block-button-dialog.component';
 import { BlockComponent } from '../block/block.component';
-import { ForcedChoiceBlockComponent } from '../block/forced-choice-block-component/forced-choice-block.component';
 import { fullScreenDialogWithData } from '../block/full-screen-dialog-with-data';
-import { OperantChoiceBlockComponent } from '../block/operant-choice-block-component/operant-choice-block.component';
-import { PreTestBlockComponent } from '../block/pre-test-block-component/pre-test-block.component';
-import {
-  TrainingNetworksBlockComponent
-} from '../block/training-networks-block-component/training-networks-block.component';
+import { OneToManyBlockComponent } from '../block/one-to-many-block-component/one-to-many-block.component';
 import { TRIAL_DELAY_INTERVAL_MS } from '../block/trial-animation-delay';
 import { ReportStatus } from '../report/report-status';
 import { ReportService } from '../report/report.service';
@@ -28,14 +23,15 @@ import { STUDY_INSTRUCTIONS } from './study-instructions';
   selector: 'study',
   templateUrl: './study.component.html',
   styleUrls: ['./study.component.scss'],
-  providers: []
+  providers: [],
 })
 export class StudyComponent implements OnInit {
   abandonmentEnabled = false;
   blocks: ComponentType<BlockComponent>[] = [
     // PreTestBlockComponent,
     // ForcedChoiceBlockComponent,
-    OperantChoiceBlockComponent,
+    // OperantChoiceBlockComponent,
+    OneToManyBlockComponent,
     // TrainingNetworksBlockComponent
   ];
   complete = false;
@@ -49,7 +45,7 @@ export class StudyComponent implements OnInit {
     private dialog: MatDialog,
     private reportSvc: ReportService,
     readonly studyConfigSvc: StudyConfigService,
-    private surveySvc: SurveyService
+    private surveySvc: SurveyService,
   ) {
   }
 
@@ -99,7 +95,7 @@ export class StudyComponent implements OnInit {
       switchMap(() => this.reportSvc.sendReport(status)),
       switchMap(() => status !== 'abandoned' ? this.surveySvc.showPostSurvey(participantId) : [text]),
       switchMap(() => this.dialog.open(BlockButtonDialogComponent,
-        fullScreenDialogWithData<BlockButtonDialogData>({ text, disableClose: true })).afterClosed())
+        fullScreenDialogWithData<BlockButtonDialogData>({ text, disableClose: true })).afterClosed()),
     ).subscribe();
   }
 

@@ -14,7 +14,7 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
   selfRelation: string;
   unknownRelation: string;
 
-  constructor(config: RelationalFrameGraphConfig
+  constructor(config: RelationalFrameGraphConfig,
   ) {
     super();
     this.selfRelation = config.selfRelation;
@@ -59,7 +59,7 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
           comparisons.push({
             relation: relations[0],
             relationType: RelationType.combinatoriallyEntailed,
-            stimuli: [startNode, endNode]
+            stimuli: [startNode, endNode],
           });
         }
       }
@@ -71,7 +71,7 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
     return [...this.nodes].map(node => ({
       relation: this.selfRelation,
       relationType: RelationType.identity,
-      stimuli: [node, node]
+      stimuli: [node, node],
     }));
   }
 
@@ -81,7 +81,7 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
       edge => ({
         relation: edge.relation,
         relationType: edge.relationType,
-        stimuli: [edge.src, edge.dest]
+        stimuli: [edge.src, edge.dest],
       }));
   }
 
@@ -90,7 +90,7 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
       edge => ({
         relation: edge.relation,
         relationType: edge.relationType,
-        stimuli: [edge.src, edge.dest]
+        stimuli: [edge.src, edge.dest],
       }));
   }
 
@@ -117,12 +117,22 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
         RelationType.mutuallyEntailed)));
   }
 
+  getStimulusComparison(firstNodeName1: string, firstNodeNetwork: number, secondNodeName: string, secondNodeNetwork: number) {
+    return Array<StimuliComparison<RelationalNode>>().concat(
+      this.identities,
+      this.trained,
+      this.mutuallyEntailed,
+      this.combinatoriallyEntailed,
+    ).find(({ stimuli }) => stimuli[0].name === firstNodeName1 && stimuli[0].network === firstNodeNetwork &&
+      stimuli[1].name === secondNodeName && stimuli[1].network === secondNodeNetwork) as StimuliComparison<RelationalNode>;
+  }
+
   findPathway(
     startNode: RelationalNode,
     endNode: RelationalNode,
     edge?: RelationalEdge<RelationType>,
     path: { nodes: RelationalNode[], edges: RelationalEdge<RelationType>[] } = { nodes: [], edges: [] },
-    paths: { nodes: RelationalNode[], edges: RelationalEdge<RelationType>[] }[] = []
+    paths: { nodes: RelationalNode[], edges: RelationalEdge<RelationType>[] }[] = [],
   ): { nodes: RelationalNode[], edges: RelationalEdge<RelationType>[] }[] {
     path.nodes = path.nodes.concat(startNode);
     if (edge) path.edges = path.edges.concat(edge);
@@ -146,7 +156,7 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
         this.identities,
         this.trained,
         this.mutuallyEntailed,
-        this.combinatoriallyEntailed
+        this.combinatoriallyEntailed,
       )
       .flat()
       .map(

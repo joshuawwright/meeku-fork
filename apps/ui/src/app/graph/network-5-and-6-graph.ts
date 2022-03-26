@@ -20,35 +20,35 @@ export class Network5And6Graph extends RelationalFrameGraph {
   ) {
     super(relationalFrameGraphConfig);
 
-    // Network 1 - known network
-    const nodeA1 = new RelationalNode('A', 5, getRandomStimulus(stimulusCase));
-    const nodeB1 = new RelationalNode('B', 5, getRandomStimulus(stimulusCase));
-    const nodeC1 = new RelationalNode('C', 5, getRandomStimulus(stimulusCase));
+    // Network 5 - known network
+    const nodeA5 = new RelationalNode('A', 5, getRandomStimulus(stimulusCase));
+    const nodeB5 = new RelationalNode('B', 5, getRandomStimulus(stimulusCase));
+    const nodeC5 = new RelationalNode('C', 5, getRandomStimulus(stimulusCase));
 
-    // Add nodes for network 1
-    this.addNode(nodeA1);
-    this.addNode(nodeB1);
-    this.addNode(nodeC1);
+    // Add nodes for network 5
+    this.addNode(nodeA5);
+    this.addNode(nodeB5);
+    this.addNode(nodeC5);
 
-    // Set A1 = B1 = C1
-    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA1, nodeB1, 'same', RelationType.trained));
-    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA1, nodeC1, 'same', RelationType.trained));
-    this.addTrainedAndMutualRelations(new RelationalEdge(nodeB1, nodeC1, 'same', RelationType.trained));
+    // Set A5 = B5 = C5
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA5, nodeB5, 'same', RelationType.trained));
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA5, nodeC5, 'same', RelationType.trained));
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeB5, nodeC5, 'same', RelationType.trained));
 
-    // Network 2 - A2 > B2 > C2
-    const nodeA2 = new RelationalNode('A', 6, getRandomStimulus(stimulusCase));
-    const nodeB2 = new RelationalNode('B', 6, getRandomStimulus(stimulusCase));
-    const nodeC2 = new RelationalNode('C', 6, getRandomStimulus(stimulusCase));
+    // Network 6 - A6 > B6 > C6
+    const nodeA6 = new RelationalNode('A', 6, getRandomStimulus(stimulusCase));
+    const nodeB6 = new RelationalNode('B', 6, getRandomStimulus(stimulusCase));
+    const nodeC6 = new RelationalNode('C', 6, getRandomStimulus(stimulusCase));
 
-    // Add nodes for network 2
-    this.addNode(nodeA2);
-    this.addNode(nodeB2);
-    this.addNode(nodeC2);
+    // Add nodes for network 6
+    this.addNode(nodeA6);
+    this.addNode(nodeB6);
+    this.addNode(nodeC6);
 
-    // Set A2 > B2 > C2
-    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA2, nodeB2, 'greaterThan', RelationType.trained));
-    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA2, nodeC2, 'greaterThan', RelationType.trained));
-    this.addTrainedAndMutualRelations(new RelationalEdge(nodeB2, nodeC2, 'greaterThan', RelationType.trained));
+    // Set A6 > B6 > C6
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA6, nodeB6, 'greaterThan', RelationType.trained));
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA6, nodeC6, 'greaterThan', RelationType.trained));
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeB6, nodeC6, 'greaterThan', RelationType.trained));
   }
 
 }
