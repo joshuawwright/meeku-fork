@@ -8,7 +8,7 @@ import { SurveyDialogComponent, SurveyDialogData } from './survey-dialog.compone
 export class SurveyService {
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) { }
 
   showPostSurvey(participantId: string): Observable<void> {
@@ -16,7 +16,7 @@ export class SurveyService {
     return this.dialog.open(SurveyDialogComponent, fullScreenDialogWithData<SurveyDialogData>(
       {
         title: `Post Survey | Participant Id = ${participantId}`,
-        survey: 'post'
+        survey: 'post',
       })).afterClosed();
   }
 
@@ -24,8 +24,8 @@ export class SurveyService {
 
     return this.dialog.open(SurveyDialogComponent, fullScreenDialogWithData<SurveyDialogData>(
       {
-        title: `Pre Survey | Participant Id = ${participantId}`,
-        survey: 'pre'
+        title: `Pre Survey`,
+        survey: 'pre',
       })).afterClosed();
   }
 }
