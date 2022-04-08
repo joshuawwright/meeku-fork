@@ -25,7 +25,7 @@ interface Stimulus1And2 {
 })
 export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   name = 'One To Many Block';
-  probeTrialStart = 30;
+  probeTrialWithoutFeedbackStart = 32;
   resettingCorrectCount = 0;
   sequentialCorrectRequiredToAdvance = 3;
   startInstructions = 'CLICK TO CONTINUE';
@@ -49,19 +49,16 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
       this.oneToManyGraph.knownNetworkNumbers;
   }
 
-  /**
-   * Creates test block trials.
-   * @returns {unknown[] | Array<Trial[][keyof Trial[]]>}
-   */
   createTrials() {
     const trainingTrials = this.getOrderedTrials(this.trainingNetworks, COMPARISONS_WITH_FEEDBACK);
-    const probeTrials = this.getOrderedTrials(this.finalNetwork, COMPARISONS_WO_FEEDBACK);
+    const probeTrialsWithFeedback = this.getOrderedTrials(this.trainingNetworks, PROBE_COMPARISON_WITH_FEEDBACK);
+    const probeTrialsWithoutFeedback = this.getOrderedTrials(this.finalNetwork, PROBE_COMPARISONS_WITHOUT_FEEDBACK);
 
-    return trainingTrials.concat(probeTrials);
+    return trainingTrials.concat(probeTrialsWithFeedback, probeTrialsWithoutFeedback);
   }
 
   feedbackEnabled(): boolean {
-    return this.index < this.probeTrialStart;
+    return this.index < this.probeTrialWithoutFeedbackStart;
   }
 
   grade(selected: TrialCompleted): FeedBackDialogData['feedback']|undefined {
@@ -82,7 +79,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   nextTrial() {
-    if (this.index >= this.probeTrialStart) {
+    if (this.index >= this.probeTrialWithoutFeedbackStart) {
       super.nextTrial();
       return;
     }
@@ -110,9 +107,6 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
     this.trials = this.createTrials();
   }
 
-  /***
-   * Resets block index, binds to the view, and shows a message.
-   */
   start() {
     if (this.trials.length === 0) this.reset();
     this.prompt(this.startInstructions, false, TRIAL_DELAY_INTERVAL_MS)
@@ -147,11 +141,25 @@ const COMPARISONS_WITH_FEEDBACK: Stimulus1And2[] = [
   { stimulus1: 'A', stimulus2: 'C' },
 ];
 
-const COMPARISONS_WO_FEEDBACK: Stimulus1And2[] = [
+const PROBE_COMPARISON_WITH_FEEDBACK: Stimulus1And2[] = [
   { stimulus1: 'A', stimulus2: 'B' },
   { stimulus1: 'B', stimulus2: 'C' },
+];
+
+const PROBE_COMPARISONS_WITHOUT_FEEDBACK: Stimulus1And2[] = [
   { stimulus1: 'B', stimulus2: 'A' },
+  { stimulus1: 'B', stimulus2: 'A' },
+  { stimulus1: 'B', stimulus2: 'A' },
+
   { stimulus1: 'C', stimulus2: 'B' },
+  { stimulus1: 'C', stimulus2: 'B' },
+  { stimulus1: 'C', stimulus2: 'B' },
+
   { stimulus1: 'C', stimulus2: 'A' },
+  { stimulus1: 'C', stimulus2: 'A' },
+  { stimulus1: 'C', stimulus2: 'A' },
+
+  { stimulus1: 'A', stimulus2: 'C' },
+  { stimulus1: 'A', stimulus2: 'C' },
   { stimulus1: 'A', stimulus2: 'C' },
 ];
