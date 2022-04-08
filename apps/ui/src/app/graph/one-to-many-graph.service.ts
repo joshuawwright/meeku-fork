@@ -76,7 +76,7 @@ export class OneToManyGraphService extends RelationalFrameGraph {
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeA10, nodeB10, 'greaterThan', RelationType.trained));
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeB10, nodeC10, 'lessThan', RelationType.trained));
 
-    // Network 9 - A11 > B11 < C11
+    // Network 11 - A11 > B11 < C11
     const nodeA11 = new RelationalNode('A', 11, getRandomStimulus(this.stimulusCase));
     const nodeB11 = new RelationalNode('B', 11, getRandomStimulus(this.stimulusCase));
     const nodeC11 = new RelationalNode('C', 11, getRandomStimulus(this.stimulusCase));
@@ -87,6 +87,18 @@ export class OneToManyGraphService extends RelationalFrameGraph {
 
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeA11, nodeB11, 'greaterThan', RelationType.trained));
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeB11, nodeC11, 'lessThan', RelationType.trained));
+
+    // Network 16 - A16 < B16 > C16
+    const nodeA16 = new RelationalNode('A', 16, getRandomStimulus(this.stimulusCase));
+    const nodeB16 = new RelationalNode('B', 16, getRandomStimulus(this.stimulusCase));
+    const nodeC16 = new RelationalNode('C', 16, getRandomStimulus(this.stimulusCase));
+
+    this.addNode(nodeA16);
+    this.addNode(nodeB16);
+    this.addNode(nodeC16);
+
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA16, nodeB16, 'lessThan', RelationType.trained));
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeB16, nodeC16, 'greaterThan', RelationType.trained));
   }
 
   createKnownNetworks() {
@@ -164,6 +176,20 @@ export class OneToManyGraphService extends RelationalFrameGraph {
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeA14, nodeB14, 'lessThan', RelationType.trained));
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeA14, nodeC14, 'lessThan', RelationType.trained));
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeB14, nodeC14, 'same', RelationType.trained));
+
+    // Network 15 - A15 = B15 > C15
+    const nodeA15 = new RelationalNode('A', 15, getRandomStimulus(this.stimulusCase));
+    const nodeB15 = new RelationalNode('B', 15, getRandomStimulus(this.stimulusCase));
+    const nodeC15 = new RelationalNode('C', 15, getRandomStimulus(this.stimulusCase));
+
+    this.addNode(nodeA15);
+    this.addNode(nodeB15);
+    this.addNode(nodeC15);
+
+    // Set A15 = B15 > C15
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA15, nodeB15, 'same', RelationType.trained));
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeA15, nodeC15, 'greaterThan', RelationType.trained));
+    this.addTrainedAndMutualRelations(new RelationalEdge(nodeB15, nodeC15, 'greaterThan', RelationType.trained));
   }
 
 }

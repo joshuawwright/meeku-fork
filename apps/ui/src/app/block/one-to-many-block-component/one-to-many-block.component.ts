@@ -12,6 +12,11 @@ import { BlockComponent } from '../block.component';
 import { randomizedComponentConfigs } from '../cue-component-configs';
 import { TRIAL_DELAY_INTERVAL_MS } from '../trial-animation-delay';
 
+interface Stimulus1And2 {
+  stimulus1: string,
+  stimulus2: string
+}
+
 @Component({
   selector: 'one-to-many-block',
   templateUrl: './one-to-many-block.component.html',
@@ -20,6 +25,7 @@ import { TRIAL_DELAY_INTERVAL_MS } from '../trial-animation-delay';
 })
 export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   name = 'One To Many Block';
+  probeTrialStart = 30;
   resettingCorrectCount = 0;
   sequentialCorrectRequiredToAdvance = 3;
   startInstructions = 'CLICK TO CONTINUE';
@@ -34,43 +40,28 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
     super(dialog, overlaySvc, reportSvc, trialCounterSvc);
   }
 
+  private get finalNetwork() {
+    return this.studyConfig.iCannotKnow ? [16] : [15];
+  }
+
+  private get trainingNetworks() {
+    return this.studyConfig.iCannotKnow ? this.oneToManyGraph.ickNetworkNumbers :
+      this.oneToManyGraph.knownNetworkNumbers;
+  }
+
   /**
    * Creates test block trials.
    * @returns {unknown[] | Array<Trial[][keyof Trial[]]>}
    */
   createTrials() {
-    const { studyConfig } = this; // defined locally so that typescript can infer types
-    if (!studyConfig) throw Error('Study configuration is undefined');
+    const trainingTrials = this.getOrderedTrials(this.trainingNetworks, COMPARISONS_WITH_FEEDBACK);
+    const probeTrials = this.getOrderedTrials(this.finalNetwork, COMPARISONS_WO_FEEDBACK);
 
-    const networks = this.studyConfig?.iCannotKnow ? this.oneToManyGraph.ickNetworkNumbers :
-      this.oneToManyGraph.knownNetworkNumbers;
-
-    const comparisions = [
-      { stimulus1: 'A', stimulus2: 'B' },
-      { stimulus1: 'B', stimulus2: 'A' },
-      { stimulus1: 'B', stimulus2: 'C' },
-      { stimulus1: 'C', stimulus2: 'B' },
-      { stimulus1: 'C', stimulus2: 'A' },
-      { stimulus1: 'A', stimulus2: 'C' },
-    ];
-    const trials: Trial[] = [];
-
-    for (const network of networks) {
-      for (const { stimulus1, stimulus2 } of comparisions) {
-        const stimulusComparison = this.oneToManyGraph.getStimulusComparison(stimulus1, network, stimulus2, network);
-
-        trials.push({
-          ...stimulusComparison,
-          cueComponentConfigs: randomizedComponentConfigs(studyConfig),
-        });
-      }
-    }
-
-    return trials;
+    return trainingTrials.concat(probeTrials);
   }
 
   feedbackEnabled(): boolean {
-    return true;
+    return this.index < this.probeTrialStart;
   }
 
   grade(selected: TrialCompleted): FeedBackDialogData['feedback']|undefined {
@@ -91,6 +82,11 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   nextTrial() {
+    if (this.index >= this.probeTrialStart) {
+      super.nextTrial();
+      return;
+    }
+
     if (this.resettingCorrectCount < this.sequentialCorrectRequiredToAdvance && this.index > -1) {
       (this.trial as Trial).cueComponentConfigs = randomizedComponentConfigs(this.studyConfig as StudyConfig);
       this.index--;
@@ -125,4 +121,37 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
         this.nextTrial();
       });
   }
+
+  private getOrderedTrials(networks: ReadonlyArray<number>, comparisons: Stimulus1And2[]) {
+    const trials: Trial[] = [];
+    for (const network of networks) {
+      for (const { stimulus1, stimulus2 } of comparisons) {
+        const stimulusComparison = this.oneToManyGraph.getStimulusComparison(stimulus1, network, stimulus2, network);
+
+        trials.push({
+          ...stimulusComparison,
+          cueComponentConfigs: randomizedComponentConfigs(this.studyConfig as StudyConfig),
+        });
+      }
+    }
+    return trials;
+  }
 }
+
+const COMPARISONS_WITH_FEEDBACK: Stimulus1And2[] = [
+  { stimulus1: 'A', stimulus2: 'B' },
+  { stimulus1: 'B', stimulus2: 'A' },
+  { stimulus1: 'B', stimulus2: 'C' },
+  { stimulus1: 'C', stimulus2: 'B' },
+  { stimulus1: 'C', stimulus2: 'A' },
+  { stimulus1: 'A', stimulus2: 'C' },
+];
+
+const COMPARISONS_WO_FEEDBACK: Stimulus1And2[] = [
+  { stimulus1: 'A', stimulus2: 'B' },
+  { stimulus1: 'B', stimulus2: 'C' },
+  { stimulus1: 'B', stimulus2: 'A' },
+  { stimulus1: 'C', stimulus2: 'B' },
+  { stimulus1: 'C', stimulus2: 'A' },
+  { stimulus1: 'A', stimulus2: 'C' },
+];

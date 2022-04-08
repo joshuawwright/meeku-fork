@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject, timer } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
@@ -21,7 +21,7 @@ import { TRIAL_ANIMATION_DURATION_MS, TRIAL_DELAY_INTERVAL_MS } from './trial-an
 @Component({
   selector: 'block',
   templateUrl: './block.component.html',
-  styleUrls: ['./block.component.scss']
+  styleUrls: ['./block.component.scss'],
 })
 export class BlockComponent {
   @Output() completed = new Subject<{ failed: boolean }>();
@@ -40,7 +40,6 @@ export class BlockComponent {
   startInstructions = 'CLICK TO START';
   @Output() started = new Subject();
   startedAt: Date|undefined;
-  @Input() studyConfig?: StudyConfig;
   studyFailed = false;
   trial?: Trial;
   @Output() trialCompleted = new EventEmitter();
@@ -51,7 +50,7 @@ export class BlockComponent {
     private dialog: MatDialog,
     private overlaySvc: OverlayService,
     private reportSvc: ReportService,
-    private trialCounterSvc: TrialCounterService
+    private trialCounterSvc: TrialCounterService,
   ) {
   }
 
@@ -66,6 +65,17 @@ export class BlockComponent {
   get probeAttempts() {
     return this._probeAttempts;
   }
+
+  _studyConfig?: StudyConfig;
+
+  get studyConfig() {
+    if (!this._studyConfig) throw Error('Study configuration is undefined');
+    return this._studyConfig;
+  }
+
+  set studyConfig(config: StudyConfig) {
+    this._studyConfig = config;
+  };
 
   private _totalTrials = 0;
 
@@ -211,8 +221,8 @@ export class BlockComponent {
       first(),
       switchMap(() => this.dialog.open(
         BlockButtonDialogComponent,
-        fullScreenDialogWithData<BlockButtonDialogData>({ text, disableClose })
-      ).componentInstance.closeClicked.pipe(first()))
+        fullScreenDialogWithData<BlockButtonDialogData>({ text, disableClose }),
+      ).componentInstance.closeClicked.pipe(first())),
     );
   }
 
@@ -234,7 +244,7 @@ export class BlockComponent {
     this.incrementAttempt();
     this.prompt(this.retryInstructions, false,
       TRIAL_DELAY_INTERVAL_MS + (this.feedBackShown ? FEEDBACK_FADE_OUT_DELAY_MS : FADE_OUT_DURATION_MS)).subscribe(
-      () => this.nextTrial()
+      () => this.nextTrial(),
     );
     this.reset();
   }
@@ -248,13 +258,13 @@ export class BlockComponent {
   showFeedback(
     feedback: FeedBackDialogData['feedback'],
     durationMs = FEEDBACK_DURATION_MS,
-    animationParams = { delay: FEEDBACK_FADE_OUT_DELAY_MS, duration: FADE_OUT_DURATION_MS }
+    animationParams = { delay: FEEDBACK_FADE_OUT_DELAY_MS, duration: FADE_OUT_DURATION_MS },
   ) {
     this.feedBackShown = true;
     if (this.isLastTrial) this.overlaySvc.show(FEEDBACK_FADE_OUT_DELAY_MS);
     this.dialog.open(
       TrialFeedbackDialogComponent,
-      fullScreenDialogWithData<FeedBackDialogData>({ animationParams, durationMs, feedback })
+      fullScreenDialogWithData<FeedBackDialogData>({ animationParams, durationMs, feedback }),
     );
   }
 
