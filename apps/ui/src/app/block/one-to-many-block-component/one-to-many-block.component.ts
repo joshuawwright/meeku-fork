@@ -51,7 +51,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
 
   createTrials() {
     const trainingTrials = this.getOrderedTrials(this.trainingNetworks, COMPARISONS_WITH_FEEDBACK);
-    const probeTrialsWithFeedback = this.getOrderedTrials(this.trainingNetworks, PROBE_COMPARISON_WITH_FEEDBACK);
+    const probeTrialsWithFeedback = this.getOrderedTrials(this.finalNetwork, PROBE_COMPARISON_WITH_FEEDBACK);
     const probeTrialsWithoutFeedback = this.getOrderedTrials(this.finalNetwork, PROBE_COMPARISONS_WITHOUT_FEEDBACK);
 
     return trainingTrials.concat(probeTrialsWithFeedback, probeTrialsWithoutFeedback);
@@ -67,21 +67,28 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
 
     if (selected?.cue?.value === this.trial.relation) {
       this.correct++;
-      this.resettingCorrectCount++;
+      if (this.index < this.probeTrialWithoutFeedbackStart) this.resettingCorrectCount++;
       this.sequentialCorrect++;
     } else {
       this.incorrect++;
       this.sequentialCorrect = 0;
-      this.resettingCorrectCount = 0;
+      if (this.index < this.probeTrialWithoutFeedbackStart) this.resettingCorrectCount = 0;
     }
 
     return isCorrect ? 'CORRECT' : 'WRONG';
   }
 
   nextTrial() {
+
     if (this.index >= this.probeTrialWithoutFeedbackStart) {
-      super.nextTrial();
-      return;
+      this.resettingCorrectCount++;
+      if (this.resettingCorrectCount < this.sequentialCorrectRequiredToAdvance) {
+        (this.trial as Trial).cueComponentConfigs = randomizedComponentConfigs(this.studyConfig as StudyConfig);
+        this.index--;
+      } else {
+        this.resettingCorrectCount = 0;
+      }
+      return super.nextTrial();
     }
 
     if (this.resettingCorrectCount < this.sequentialCorrectRequiredToAdvance && this.index > -1) {
@@ -148,18 +155,7 @@ const PROBE_COMPARISON_WITH_FEEDBACK: Stimulus1And2[] = [
 
 const PROBE_COMPARISONS_WITHOUT_FEEDBACK: Stimulus1And2[] = [
   { stimulus1: 'B', stimulus2: 'A' },
-  { stimulus1: 'B', stimulus2: 'A' },
-  { stimulus1: 'B', stimulus2: 'A' },
-
   { stimulus1: 'C', stimulus2: 'B' },
-  { stimulus1: 'C', stimulus2: 'B' },
-  { stimulus1: 'C', stimulus2: 'B' },
-
   { stimulus1: 'C', stimulus2: 'A' },
-  { stimulus1: 'C', stimulus2: 'A' },
-  { stimulus1: 'C', stimulus2: 'A' },
-
-  { stimulus1: 'A', stimulus2: 'C' },
-  { stimulus1: 'A', stimulus2: 'C' },
   { stimulus1: 'A', stimulus2: 'C' },
 ];
