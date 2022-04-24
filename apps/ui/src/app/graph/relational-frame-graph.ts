@@ -1,4 +1,6 @@
 import { cloneDeep } from 'lodash-es';
+import { getRandomStimulus } from '../study-conditions/get-random-stimuli';
+import { StimulusCase } from '../study-conditions/stimulus-case';
 import { Digraph } from './digraph';
 import { RelationType } from './relation-type';
 import { RelationalEdge } from './relational-edge';
@@ -117,16 +119,6 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
         RelationType.mutuallyEntailed)));
   }
 
-  getStimulusComparison(firstNodeName1: string, firstNodeNetwork: number, secondNodeName: string, secondNodeNetwork: number) {
-    return Array<StimuliComparison<RelationalNode>>().concat(
-      this.identities,
-      this.trained,
-      this.mutuallyEntailed,
-      this.combinatoriallyEntailed,
-    ).find(({ stimuli }) => stimuli[0].name === firstNodeName1 && stimuli[0].network === firstNodeNetwork &&
-      stimuli[1].name === secondNodeName && stimuli[1].network === secondNodeNetwork) as StimuliComparison<RelationalNode>;
-  }
-
   findPathway(
     startNode: RelationalNode,
     endNode: RelationalNode,
@@ -149,6 +141,22 @@ export class RelationalFrameGraph extends Digraph<RelationalNode, RelationalEdge
       }
       return paths;
     }
+  }
+
+  getStimulusComparison(
+    firstNodeName1: string,
+    firstNodeNetwork: number,
+    secondNodeName: string,
+    secondNodeNetwork: number,
+  ) {
+    return Array<StimuliComparison<RelationalNode>>().concat(
+      this.identities,
+      this.trained,
+      this.mutuallyEntailed,
+      this.combinatoriallyEntailed,
+    ).find(({ stimuli }) => stimuli[0].name === firstNodeName1 && stimuli[0].network === firstNodeNetwork &&
+      stimuli[1].name === secondNodeName && stimuli[1].network ===
+      secondNodeNetwork) as StimuliComparison<RelationalNode>;
   }
 
   toString(): string {

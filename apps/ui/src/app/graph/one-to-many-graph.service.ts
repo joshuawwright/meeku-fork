@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { getRandomStimulus } from '../study-conditions/get-random-stimuli';
 import { StimulusCase } from '../study-conditions/stimulus-case';
+import { StudyConfigService } from '../study-config-form/study-config.service';
 import { STIMULUS_CASE } from '../study/study.module';
 import { RelationType } from './relation-type';
 import { RelationalEdge } from './relational-edge';
@@ -14,17 +15,28 @@ import { SAME_GT_LT_ICK_GRAPH_CONFIG } from './same-gt-lt-ick-graph-config';
 })
 export class OneToManyGraphService extends RelationalFrameGraph {
 
-  ickNetworkNumbers: ReadonlyArray<number> = [7, 8, 9, 10, 11];
-  knownNetworkNumbers: ReadonlyArray<number> = [5, 6, 12, 13, 14];
+  private finalIckNetworks = [16];
+  private finalKnownNetworks = [15];
+  private ickNetworks = [7, 8, 9, 10, 11];
+  private knownNetworks = [5, 6, 12, 13, 14];
+  includeRelationsBetweenNetworks = false
 
   constructor(
     @Inject(STIMULUS_CASE) private stimulusCase: StimulusCase,
     @Inject(SAME_GT_LT_ICK_GRAPH_CONFIG) private relationalFrameGraphConfig: RelationalFrameGraphConfig,
+    private config: StudyConfigService,
   ) {
     super(relationalFrameGraphConfig);
-    this.includeRelationsBetweenNetworks = false;
     this.createIckNetworks();
     this.createKnownNetworks();
+  }
+
+  get finalNetworks(): ReadonlyArray<number> {
+    return this.config.iCannotKnow ? this.finalIckNetworks : this.finalKnownNetworks;
+  }
+
+  get trainingNetworks(): ReadonlyArray<number> {
+    return this.config.iCannotKnow ? this.ickNetworks : this.knownNetworks;
   }
 
   createIckNetworks() {
@@ -190,6 +202,12 @@ export class OneToManyGraphService extends RelationalFrameGraph {
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeA15, nodeB15, 'same', RelationType.trained));
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeA15, nodeC15, 'greaterThan', RelationType.trained));
     this.addTrainedAndMutualRelations(new RelationalEdge(nodeB15, nodeC15, 'greaterThan', RelationType.trained));
+  }
+
+  updateNodeValuesWithNewStimuli() {
+    for (const node of this.nodes) {
+      node.value = getRandomStimulus(this.stimulusCase);
+    }
   }
 
 }

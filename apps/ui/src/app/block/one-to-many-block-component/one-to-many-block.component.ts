@@ -5,9 +5,7 @@ import { OverlayService } from '../../overlay/overlay.service';
 import { ReportService } from '../../report/report.service';
 import { StudyConfig } from '../../study-config-form/study-config';
 import { Trial } from '../../trial/trial';
-import { FeedBackDialogData } from '../../trial/trial-correct/feed-back-dialog.data';
 import { TrialCounterService } from '../../trial/trial-counter.service';
-import { TrialCompleted } from '../../trial/trial.component';
 import { BlockComponent } from '../block.component';
 import { randomizedComponentConfigs } from '../cue-component-configs';
 import { TRIAL_DELAY_INTERVAL_MS } from '../trial-animation-delay';
@@ -21,38 +19,57 @@ interface Stimulus1And2 {
   selector: 'one-to-many-block',
   templateUrl: './one-to-many-block.component.html',
   styleUrls: ['./one-to-many-block.component.scss'],
-  animations: [],
 })
 export class OneToManyBlockComponent extends BlockComponent implements OnInit {
+  maxAttempts = 0;
   name = 'One To Many Block';
+  probeTrialCount = 0;
   probeTrialWithoutFeedbackStart = 32;
-  resettingCorrectCount = 0;
+  probeWrongCount = 0;
   sequentialCorrectRequiredToAdvance = 3;
   startInstructions = 'CLICK TO CONTINUE';
+  trainingTrialCount = 0;
 
   constructor(
     dialog: MatDialog,
-    overlaySvc: OverlayService,
-    reportSvc: ReportService,
-    trialCounterSvc: TrialCounterService,
+    overlay: OverlayService,
+    reportService: ReportService,
+    counter: TrialCounterService,
     private oneToManyGraph: OneToManyGraphService,
   ) {
-    super(dialog, overlaySvc, reportSvc, trialCounterSvc);
+    super(dialog, overlay, reportService, counter);
   }
 
-  private get finalNetwork() {
-    return this.studyConfig.iCannotKnow ? [16] : [15];
+  get isTrainingTrial() {
+    return this.index < this.probeTrialWithoutFeedbackStart;
   }
 
-  private get trainingNetworks() {
-    return this.studyConfig.iCannotKnow ? this.oneToManyGraph.ickNetworkNumbers :
-      this.oneToManyGraph.knownNetworkNumbers;
+  private get blockFailed() {
+    return this.attempts > this.maxAttempts;
+  }
+
+  private get lastAnswerCorrect() {
+    return this.sequentialCorrect > 0;
+  }
+
+  private get repeatBlock() {
+    return this.probeWrongCount === 3;
+  }
+
+  private get repeatProbeTrial() {
+    return this.probeTrialCount < this.sequentialCorrectRequiredToAdvance;
+  }
+
+  private get repeatTrainingTrial() {
+    return this.trainingTrialCount < this.sequentialCorrectRequiredToAdvance && this.index > -1;
   }
 
   createTrials() {
-    const trainingTrials = this.getOrderedTrials(this.trainingNetworks, COMPARISONS_WITH_FEEDBACK);
-    const probeTrialsWithFeedback = this.getOrderedTrials(this.finalNetwork, PROBE_COMPARISON_WITH_FEEDBACK);
-    const probeTrialsWithoutFeedback = this.getOrderedTrials(this.finalNetwork, PROBE_COMPARISONS_WITHOUT_FEEDBACK);
+    const trainingTrials = this.getOrderedTrials(this.oneToManyGraph.trainingNetworks, COMPARISONS_WITH_FEEDBACK);
+    const probeTrialsWithFeedback = this.getOrderedTrials(this.oneToManyGraph.finalNetworks,
+      PROBE_COMPARISON_WITH_FEEDBACK);
+    const probeTrialsWithoutFeedback = this.getOrderedTrials(this.oneToManyGraph.finalNetworks,
+      PROBE_COMPARISONS_WITHOUT_FEEDBACK);
 
     return trainingTrials.concat(probeTrialsWithFeedback, probeTrialsWithoutFeedback);
   }
@@ -61,61 +78,34 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
     return this.index < this.probeTrialWithoutFeedbackStart;
   }
 
-  grade(selected: TrialCompleted): FeedBackDialogData['feedback']|undefined {
-    if (!this.trial) throw Error('Trial is undefined');
-    const isCorrect = selected?.cue?.value === this.trial.relation;
-
-    if (selected?.cue?.value === this.trial.relation) {
-      this.correct++;
-      if (this.index < this.probeTrialWithoutFeedbackStart) this.resettingCorrectCount++;
-      this.sequentialCorrect++;
-    } else {
-      this.incorrect++;
-      this.sequentialCorrect = 0;
-      if (this.index < this.probeTrialWithoutFeedbackStart) this.resettingCorrectCount = 0;
-    }
-
-    return isCorrect ? 'CORRECT' : 'WRONG';
-  }
-
   nextTrial() {
-
-    if (this.index >= this.probeTrialWithoutFeedbackStart) {
-      this.resettingCorrectCount++;
-      if (this.resettingCorrectCount < this.sequentialCorrectRequiredToAdvance) {
-        (this.trial as Trial).cueComponentConfigs = randomizedComponentConfigs(this.studyConfig as StudyConfig);
-        this.index--;
-      } else {
-        this.resettingCorrectCount = 0;
-      }
-      return super.nextTrial();
+    this.isTrainingTrial ? this.nextTrainingTrial() : this.nextProbeTrial();
+    try {
+      console.log('trial num', this.trialNum);
+      console.log('trial num', this.trial);
+    }
+    catch (e) {
+      console.warn(e);
     }
 
-    if (this.resettingCorrectCount < this.sequentialCorrectRequiredToAdvance && this.index > -1) {
-      (this.trial as Trial).cueComponentConfigs = randomizedComponentConfigs(this.studyConfig as StudyConfig);
-      this.index--;
-    } else {
-      this.resettingCorrectCount = 0;
-    }
-    super.nextTrial();
   }
 
   ngOnInit(): void {
     this.start();
   }
 
-  /***
-   * Resets block index, correct count, incorrect count, and generates fresh trials.
-   */
   reset() {
     this.index = -1;
     this.correct = 0;
     this.incorrect = 0;
-    this.trials = this.createTrials();
+    this.probeTrialCount = 0;
+    this.probeWrongCount = 0;
+    this.trainingTrialCount = 0;
+    this.oneToManyGraph.updateNodeValuesWithNewStimuli();
   }
 
   start() {
-    if (this.trials.length === 0) this.reset();
+    this.trials = this.createTrials();
     this.prompt(this.startInstructions, false, TRIAL_DELAY_INTERVAL_MS)
       .subscribe(() => {
         this.started.next();
@@ -136,6 +126,45 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
       }
     }
     return trials;
+  }
+
+  private nextProbeTrial() {
+    this.probeWrongCount = this.lastAnswerCorrect ? this.probeWrongCount : this.probeWrongCount + 1;
+    this.probeTrialCount++;
+
+    if (this.repeatBlock) {
+      this.restart();
+    } else if (this.repeatProbeTrial) {
+      this.repeatTrial();
+    } else {
+      this.probeTrialCount = 0;
+      super.nextTrial();
+    }
+  }
+
+  private nextTrainingTrial() {
+    this.trainingTrialCount = this.lastAnswerCorrect ? this.trainingTrialCount + 1 : 0;
+
+    if (this.repeatTrainingTrial) {
+      this.repeatTrial();
+    } else {
+      this.trainingTrialCount = 0;
+      super.nextTrial();
+    }
+  }
+
+  private randomizeStimuliPositions() {
+    this.trial.cueComponentConfigs = randomizedComponentConfigs(this.studyConfig);
+  }
+
+  private repeatTrial() {
+    this.randomizeStimuliPositions();
+    this.index--;
+    super.nextTrial();
+  }
+
+  private restart() {
+    this.blockFailed ? this.failed() : this.retry();
   }
 }
 

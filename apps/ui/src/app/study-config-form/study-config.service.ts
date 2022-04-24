@@ -22,6 +22,10 @@ export class StudyConfigService {
 
   private _config?: StudyConfig;
 
+  get iCannotKnow() {
+    return this.config.iCannotKnow;
+  }
+
   get config(): StudyConfig {
     if (!this._config) throw Error('Config is not defined');
     return this._config;

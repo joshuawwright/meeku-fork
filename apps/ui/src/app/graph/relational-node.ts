@@ -1,21 +1,16 @@
 export class RelationalNode {
-  readonly name: string;
-  readonly network: number;
-  readonly value: string;
-
-  constructor(name: string, network: number, value = '') {
-    this.name = name;
-    this.network = network;
-    this.value = value;
+  constructor(readonly name: string, readonly network: number, value = '') {
+    this._value = value;
   }
 
-  /**
-   * Returns a printable representation of the given object. When the result
-   * from repr() is passed to eval(), we will get a copy of the original object
-   * @returns {string}
-   */
-  repr(): string {
-    return `new RelationalFrameNode('${this.name}','${this.network}','${this.value}')`;
+  private _value: string;
+
+  get value() {
+    return this._value;
+  }
+
+  set value(value: string) {
+    this._value = value;
   }
 
   toString(): string {

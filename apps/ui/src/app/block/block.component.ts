@@ -41,7 +41,7 @@ export class BlockComponent {
   @Output() started = new Subject();
   startedAt: Date|undefined;
   studyFailed = false;
-  trial?: Trial;
+  _trial?: Trial;
   @Output() trialCompleted = new EventEmitter();
   @ViewChild(TrialComponent, { static: false }) trialComponent?: TrialComponent;
   trials: Trial[] = [];
@@ -52,6 +52,15 @@ export class BlockComponent {
     private reportSvc: ReportService,
     private trialCounterSvc: TrialCounterService,
   ) {
+  }
+
+  get trial() {
+    if (!this._trial) throw Error('Trial is undefined');
+    return this._trial;
+  }
+
+  set trial(trial: Trial) {
+    this._trial = trial;
   }
 
   private _attempts = 0;
@@ -184,13 +193,6 @@ export class BlockComponent {
     return this._trainingAttempts++;
   }
 
-  /**
-   * Starts the next trial in the block. If the index is negative then the
-   * started date is stored. If the trials have not been completed the index is
-   * increased by 1 and then the trial is shown with the specified delay. The
-   * trial completed event is subscribe to and linked to the relation selected function
-   * in the block. If all trials have been completed the complete function is called.
-   */
   nextTrial() {
     if (this.index === -1) this.startedAt = new Date();
 
