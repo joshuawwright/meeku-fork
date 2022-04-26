@@ -34,6 +34,7 @@ export class BlockComponent {
   incorrect = 0;
   index = -1;
   isVisible = true;
+  lastTrialWasColor = false;
   name = 'Block';
   retryInstructions = 'CLICK TO TRY AGAIN';
   sequentialCorrect = 0;
@@ -41,7 +42,6 @@ export class BlockComponent {
   @Output() started = new Subject();
   startedAt: Date|undefined;
   studyFailed = false;
-  _trial?: Trial;
   @Output() trialCompleted = new EventEmitter();
   @ViewChild(TrialComponent, { static: false }) trialComponent?: TrialComponent;
   trials: Trial[] = [];
@@ -52,15 +52,6 @@ export class BlockComponent {
     private reportSvc: ReportService,
     private trialCounterSvc: TrialCounterService,
   ) {
-  }
-
-  get trial() {
-    if (!this._trial) throw Error('Trial is undefined');
-    return this._trial;
-  }
-
-  set trial(trial: Trial) {
-    this._trial = trial;
   }
 
   private _attempts = 0;
@@ -96,6 +87,17 @@ export class BlockComponent {
 
   get trainingAttempts() {
     return this._trainingAttempts;
+  }
+
+  _trial?: Trial;
+
+  get trial() {
+    if (!this._trial) throw Error('Trial is undefined');
+    return this._trial;
+  }
+
+  set trial(trial: Trial) {
+    this._trial = trial;
   }
 
   get isLastTrial() {
@@ -163,17 +165,17 @@ export class BlockComponent {
    * @returns {"CORRECT" | "WRONG"}
    */
   grade(selected: TrialCompleted): FeedBackDialogData['feedback']|undefined {
-    if (!this.trial) throw Error('Trial is undefined');
     const isCorrect = selected?.cue?.value === this.trial.relation;
 
-    if (selected?.cue?.value === this.trial.relation) {
-      this.correct++;
-      this.sequentialCorrect++;
-    } else {
-      this.incorrect++;
-      this.sequentialCorrect = 0;
+    if (!['red', 'green', 'blue'].includes(this.trial.relation)) {
+      if (selected?.cue?.value === this.trial.relation) {
+        this.correct++;
+        this.sequentialCorrect++;
+      } else {
+        this.incorrect++;
+        this.sequentialCorrect = 0;
+      }
     }
-
     return isCorrect ? 'CORRECT' : 'WRONG';
   }
 
@@ -203,7 +205,6 @@ export class BlockComponent {
       this.trialCompleted.pipe(first()).subscribe(selected => this.cueSelected(selected));
       this.trialCounterSvc.reset();
     } else if (this.index !== this.trials.length - 1) {
-      this.index++;
       this.showTrial(this.trials[this.index], this.feedBackShown ? FEEDBACK_FADE_OUT_DELAY_MS : 0);
       this.trialCompleted.pipe(first()).subscribe(selected => this.cueSelected(selected));
     } else {
@@ -276,6 +277,7 @@ export class BlockComponent {
    * @param {number} delayMs
    */
   showTrial(trial: Trial, delayMs = FEEDBACK_FADE_OUT_DELAY_MS) {
+    this.lastTrialWasColor = ['red', 'green', 'blue'].includes(trial.relation);
     this.feedBackShown = false;
     this.trial = trial;
     setTimeout(() => this.trialComponent?.show(trial), delayMs);

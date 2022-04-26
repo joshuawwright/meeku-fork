@@ -21,7 +21,7 @@ interface Stimulus1And2 {
   styleUrls: ['./one-to-many-block.component.scss'],
 })
 export class OneToManyBlockComponent extends BlockComponent implements OnInit {
-  maxAttempts = 0;
+  maxAttempts = 9;
   name = 'One To Many Block';
   probeTrialCount = 0;
   probeTrialWithoutFeedbackStart = 32;
@@ -79,15 +79,9 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   nextTrial() {
-    this.isTrainingTrial ? this.nextTrainingTrial() : this.nextProbeTrial();
-    try {
-      console.log('trial num', this.trialNum);
-      console.log('trial num', this.trial);
-    }
-    catch (e) {
-      console.warn(e);
-    }
+    if (this.lastTrialWasColor) return super.nextTrial();
 
+    this.isTrainingTrial ? this.nextTrainingTrial() : this.nextProbeTrial();
   }
 
   ngOnInit(): void {
@@ -138,17 +132,18 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
       this.repeatTrial();
     } else {
       this.probeTrialCount = 0;
+      this.index++;
       super.nextTrial();
     }
   }
 
   private nextTrainingTrial() {
     this.trainingTrialCount = this.lastAnswerCorrect ? this.trainingTrialCount + 1 : 0;
-
     if (this.repeatTrainingTrial) {
       this.repeatTrial();
     } else {
       this.trainingTrialCount = 0;
+      this.index++;
       super.nextTrial();
     }
   }
@@ -159,7 +154,6 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
 
   private repeatTrial() {
     this.randomizeStimuliPositions();
-    this.index--;
     super.nextTrial();
   }
 

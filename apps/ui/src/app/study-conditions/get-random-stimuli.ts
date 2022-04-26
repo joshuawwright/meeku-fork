@@ -1,5 +1,5 @@
 import { sample } from 'lodash-es';
-import { OneHundredNonWordTrigramsFilteredByFrequency } from './one-hundred-non-word-trigrams-filtered-by-frequency';
+import { TWO_HUNDRED_NON_WORD_TRIGRAMS } from './two_hundred-trigrams';
 import { STIMULUS_CASE, StimulusCase } from './stimulus-case';
 
 export function getRandomStimulus(stimulusCase: StimulusCase) {
@@ -9,12 +9,12 @@ export function getRandomStimulus(stimulusCase: StimulusCase) {
 }
 
 function removeTrigram(trigram: string) {
-  const index = OneHundredNonWordTrigramsFilteredByFrequency.indexOf(trigram);
-  OneHundredNonWordTrigramsFilteredByFrequency.splice(index, 1);
+  const index = TWO_HUNDRED_NON_WORD_TRIGRAMS.indexOf(trigram);
+  TWO_HUNDRED_NON_WORD_TRIGRAMS.splice(index, 1);
 }
 
 function getTrigramOrThrow() {
-  const trigram = sample(OneHundredNonWordTrigramsFilteredByFrequency);
+  const trigram = sample(TWO_HUNDRED_NON_WORD_TRIGRAMS);
   if (!trigram) throw Error('Random value returned "undefined"!');
   return trigram;
 }
