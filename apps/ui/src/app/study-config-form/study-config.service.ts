@@ -37,6 +37,8 @@ export class StudyConfigService {
 
   createForm(iCannotKnowBalanceDisabled = true): FormGroup<StudyConfig> {
     const numericValidators1To100 = [Validators.required, Validators.min(1), Validators.max(100)];
+    const numericValidators1To12 = [Validators.required, Validators.min(1), Validators.max(12)];
+
     return this.fb.group({
       balance: this.fb.group<StudyConfig['balance']>({
         lessThan: [1, numericValidators1To100],
@@ -44,6 +46,7 @@ export class StudyConfigService {
         greaterThan: [1, numericValidators1To100],
         iCannotKnow: [{ value: 1, disabled: iCannotKnowBalanceDisabled }, numericValidators1To100]
       }),
+      repeatProbeTrialWrongCount: [3, numericValidators1To12],
       contextualControl: [false, Validators.required],
       cueType: [CUE_TYPE.nonArbitrary, Validators.required],
       iCannotKnow: [false, Validators.required],

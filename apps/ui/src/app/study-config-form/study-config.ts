@@ -6,6 +6,7 @@ export interface StudyConfig {
   contextualControl: boolean;
   cueType: CueType;
   iCannotKnow: boolean;
+  repeatProbeTrialWrongCount: number;
   participantId: string;
   trialTimeoutSeconds: number;
 }

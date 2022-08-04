@@ -17,6 +17,7 @@ export function studyConfigFromParams(params: Params): StudyConfig {
     'balance.greaterThan': paramToNonZeroPositiveNum,
     'balance.iCannotKnow': iCannotKnow ? paramToNonZeroPositiveNum : undefined,
     'balance.lessThan': paramToNonZeroPositiveNum,
+    repeatProbeTrialWrongCount: paramToNonZeroPositiveNum,
     contextualControl: paramToBool,
     cueType: paramToCueType,
     iCannotKnow: paramToBool,

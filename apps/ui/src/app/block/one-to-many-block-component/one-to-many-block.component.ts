@@ -53,7 +53,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   private get repeatBlock() {
-    return this.probeWrongCount === 3;
+    return this.probeWrongCount === this.studyConfig.repeatProbeTrialWrongCount;
   }
 
   private get repeatProbeTrial() {
