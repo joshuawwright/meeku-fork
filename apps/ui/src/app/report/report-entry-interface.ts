@@ -44,4 +44,5 @@ export interface ReportEntry {
   trialOutcome: string;
   trialStarted: Date|string;
   trialTimeoutSeconds: StudyConfig['trialTimeoutSeconds'];
+  repeatProbeTrialWrongCount: number;
 }

@@ -60,9 +60,10 @@ export class ReportService {
       containsSequentialTriplicates: ['', Validators.required],
       failSafeDuration: ['', Validators.required],
       startInstructions: ['', Validators.required],
+      repeatProbeTrialWrongCount: [0, Validators.min(0)],
       retryInstructions: ['', Validators.required],
       studyFailed: ['FALSE'],
-      sequentialCorrect: [-1, Validators.min(0)]
+      sequentialCorrect: [-1, Validators.min(0)],
     });
   }
 
@@ -84,6 +85,7 @@ export class ReportService {
     this.add('balanceLessThan', block.studyConfig.balance.lessThan);
     this.add('balanceGreaterThan', block.studyConfig.balance.greaterThan);
     this.add('balanceICannotKnow', block.studyConfig.balance.iCannotKnow ?? 0);
+    this.add('repeatProbeTrialWrongCount', block.studyConfig.repeatProbeTrialWrongCount ?? 0);
     this.add('blockId', block.name);
     this.add('blockAttempts', block.attempts);
     this.add('trainingAttempts', block.trainingAttempts);
@@ -123,7 +125,7 @@ export class ReportService {
   }
 
   blobToBase64(blob: Blob) {
-    return new Promise((resolve, _) => {
+    return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result);
       reader.readAsDataURL(blob);
@@ -158,7 +160,8 @@ export class ReportService {
         message: `New report has been issued! ${participantId}`,
         participant: name
       },
-      'user_OawQbiPiSgdzcdY3SkdGT').then(function(response) {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      'user_OawQbiPiSgdzcdY3SkdGT').then(function() {
     }, function(error) {
       console.error('Failed to send report...', error);
     });
