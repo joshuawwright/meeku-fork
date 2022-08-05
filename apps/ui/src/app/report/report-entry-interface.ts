@@ -6,6 +6,7 @@ export interface ReportEntry {
   balanceICannotKnow: StudyConfig['balance']['iCannotKnow'];
   balanceLessThan: StudyConfig['balance']['lessThan'];
   blockAttempts: number;
+  maxAttempts: number;
   blockId: string;
   button1Image: string;
   button1Relation: string;
@@ -44,5 +45,5 @@ export interface ReportEntry {
   trialOutcome: string;
   trialStarted: Date|string;
   trialTimeoutSeconds: StudyConfig['trialTimeoutSeconds'];
-  repeatProbeTrialWrongCount: number;
+  repeatBlockWhenProbeTrialWrongCountIs: number;
 }

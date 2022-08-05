@@ -46,7 +46,8 @@ export class StudyConfigService {
         greaterThan: [1, numericValidators1To100],
         iCannotKnow: [{ value: 1, disabled: iCannotKnowBalanceDisabled }, numericValidators1To100]
       }),
-      repeatProbeTrialWrongCount: [3, numericValidators1To12],
+      maxAttempts: [9, numericValidators1To100],
+      repeatBlockWhenProbeTrialWrongCountIs: [3, numericValidators1To12],
       contextualControl: [false, Validators.required],
       cueType: [CUE_TYPE.nonArbitrary, Validators.required],
       iCannotKnow: [false, Validators.required],

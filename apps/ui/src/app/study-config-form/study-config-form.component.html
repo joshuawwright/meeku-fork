@@ -18,17 +18,31 @@
 
       <mat-checkbox formControlName="iCannotKnow">I cannot know</mat-checkbox>
 
-      <mat-form-field *ngIf="form.get('repeatProbeTrialWrongCount') as repeatProbeTrialWrongCountCtrl" appearance="outline">
-        <mat-label>Repeat Probe Trials When Wrong Count Is</mat-label>
-        <input matInput min="1" max="12" type="number" formControlName="repeatProbeTrialWrongCount">
-        <mat-error *ngIf="repeatProbeTrialWrongCountCtrl.hasError('required')">
-          Repeat Probe Trials When Wrong Count Is <strong>required</strong>
+      <mat-form-field *ngIf="form.get('maxAttempts') as maxAttemptsCtrl" appearance="outline">
+        <mat-label>Max Attempts</mat-label>
+        <input matInput min="1" max="100" type="number" formControlName="maxAttempts">
+        <mat-error *ngIf="maxAttemptsCtrl.hasError('required')">
+          Max Attempts <strong>required</strong>
         </mat-error>
-        <mat-error *ngIf="repeatProbeTrialWrongCountCtrl.hasError('min')">
-          Repeat Probe Trials When Wrong Count Is must be a <strong>minimum</strong> of 1
+        <mat-error *ngIf="maxAttemptsCtrl.hasError('min')">
+          Max Attempts must be a <strong>minimum</strong> of 1
         </mat-error>
-        <mat-error *ngIf="repeatProbeTrialWrongCountCtrl.hasError('max')">
-          Repeat Probe Trials When Wrong Count Is must be a <strong>maximum</strong> of 12
+        <mat-error *ngIf="maxAttemptsCtrl.hasError('max')">
+          Max Attempts must be a <strong>maximum</strong> of 100
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="form.get('repeatBlockWhenProbeTrialWrongCountIs') as repeatBlockWhenProbeTrialWrongCountIsCtrl" appearance="outline">
+        <mat-label>Repeat Block When Probe Trials Wrong Count Is</mat-label>
+        <input matInput min="1" max="12" type="number" formControlName="repeatBlockWhenProbeTrialWrongCountIs">
+        <mat-error *ngIf="repeatBlockWhenProbeTrialWrongCountIsCtrl.hasError('required')">
+          Repeat Block When Probe Trials Wrong Count Is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="repeatBlockWhenProbeTrialWrongCountIsCtrl.hasError('min')">
+          Repeat Block When Probe Trials Wrong Count Is must be a <strong>minimum</strong> of 1
+        </mat-error>
+        <mat-error *ngIf="repeatBlockWhenProbeTrialWrongCountIsCtrl.hasError('max')">
+          Repeat Block When Probe Trials Wrong Count Is must be a <strong>maximum</strong> of 12
         </mat-error>
       </mat-form-field>
 

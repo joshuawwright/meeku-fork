@@ -204,7 +204,7 @@ export class BlockComponent {
       this.showTrial(createColorTrial(), this.feedBackShown ? FEEDBACK_FADE_OUT_DELAY_MS : 0);
       this.trialCompleted.pipe(first()).subscribe(selected => this.cueSelected(selected));
       this.trialCounterSvc.reset();
-    } else if (this.index !== this.trials.length - 1) {
+    } else if (this.index < this.trials.length) {
       this.showTrial(this.trials[this.index], this.feedBackShown ? FEEDBACK_FADE_OUT_DELAY_MS : 0);
       this.trialCompleted.pipe(first()).subscribe(selected => this.cueSelected(selected));
     } else {

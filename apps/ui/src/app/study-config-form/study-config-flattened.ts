@@ -6,7 +6,8 @@ export interface StudyConfigFlattened {
   'balance.iCannotKnow': number;
   'balance.lessThan': number;
   contextualControl: boolean;
-  repeatProbeTrialWrongCount: number;
+  repeatBlockWhenProbeTrialWrongCountIs: number;
+  maxAttempts: number;
   cueType: CueType;
   iCannotKnow: boolean;
   participantId: string;

@@ -21,7 +21,6 @@ interface Stimulus1And2 {
   styleUrls: ['./one-to-many-block.component.scss'],
 })
 export class OneToManyBlockComponent extends BlockComponent implements OnInit {
-  maxAttempts = 9;
   name = 'One To Many Block';
   probeTrialCount = 0;
   probeTrialWithoutFeedbackStart = 32;
@@ -45,7 +44,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   private get blockFailed() {
-    return this.attempts > this.maxAttempts;
+    return this.attempts > this.studyConfig.maxAttempts;
   }
 
   private get lastAnswerCorrect() {
@@ -53,7 +52,8 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   private get repeatBlock() {
-    return this.probeWrongCount === this.studyConfig.repeatProbeTrialWrongCount;
+    return this.probeWrongCount >= this.studyConfig.repeatBlockWhenProbeTrialWrongCountIs && this.trialNum === 36 &&
+      this.probeTrialCount === 3;
   }
 
   private get repeatProbeTrial() {
@@ -102,6 +102,10 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
     this.trials = this.createTrials();
     this.prompt(this.startInstructions, false, TRIAL_DELAY_INTERVAL_MS)
       .subscribe(() => {
+        // Uncomment this to start at the probe stage.
+        // this.index = 31;
+        // this.trial = this.trials[this.index];
+
         this.started.next();
         this.nextTrial();
       });
@@ -123,7 +127,9 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   private nextProbeTrial() {
-    this.probeWrongCount = this.lastAnswerCorrect ? this.probeWrongCount : this.probeWrongCount + 1;
+    if (this._trial) {
+      this.probeWrongCount = this.lastAnswerCorrect ? this.probeWrongCount : this.probeWrongCount + 1;
+    }
     this.probeTrialCount++;
 
     if (this.repeatBlock) {

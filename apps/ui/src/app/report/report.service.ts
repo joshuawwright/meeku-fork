@@ -11,7 +11,7 @@ import { ReportEntry } from './report-entry-interface';
 import { ReportStatus } from './report-status';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportService {
   formGroup: FormGroup<ReportEntry>;
@@ -60,10 +60,11 @@ export class ReportService {
       containsSequentialTriplicates: ['', Validators.required],
       failSafeDuration: ['', Validators.required],
       startInstructions: ['', Validators.required],
-      repeatProbeTrialWrongCount: [0, Validators.min(0)],
       retryInstructions: ['', Validators.required],
       studyFailed: ['FALSE'],
       sequentialCorrect: [-1, Validators.min(0)],
+      maxAttempts: [0, Validators.min(1)],
+      repeatBlockWhenProbeTrialWrongCountIs: [0, Validators.min(0)],
     });
   }
 
@@ -85,7 +86,8 @@ export class ReportService {
     this.add('balanceLessThan', block.studyConfig.balance.lessThan);
     this.add('balanceGreaterThan', block.studyConfig.balance.greaterThan);
     this.add('balanceICannotKnow', block.studyConfig.balance.iCannotKnow ?? 0);
-    this.add('repeatProbeTrialWrongCount', block.studyConfig.repeatProbeTrialWrongCount ?? 0);
+    this.add('repeatBlockWhenProbeTrialWrongCountIs', block.studyConfig.repeatBlockWhenProbeTrialWrongCountIs);
+    this.add('maxAttempts', block.studyConfig.maxAttempts);
     this.add('blockId', block.name);
     this.add('blockAttempts', block.attempts);
     this.add('trainingAttempts', block.trainingAttempts);
@@ -146,7 +148,7 @@ export class ReportService {
     const name = `MEEKU - ${participantId}.csv`;
 
     const blob = new Blob([
-      status + CRLF + Object.keys(this.formGroup.value).join(';') + CRLF + report
+      status + CRLF + Object.keys(this.formGroup.value).join(';') + CRLF + report,
     ], { type: 'text/csv' });
     const content = await this.blobToBase64(blob);
 
@@ -158,11 +160,11 @@ export class ReportService {
         from_name: 'Meeku Robot',
         to_name: 'Patrick',
         message: `New report has been issued! ${participantId}`,
-        participant: name
+        participant: name,
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      'user_OawQbiPiSgdzcdY3SkdGT').then(function() {
-    }, function(error) {
+      'user_OawQbiPiSgdzcdY3SkdGT').then(function () {
+    }, function (error) {
       console.error('Failed to send report...', error);
     });
   }
