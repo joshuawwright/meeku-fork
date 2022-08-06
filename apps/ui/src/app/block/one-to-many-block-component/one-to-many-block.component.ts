@@ -44,7 +44,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   private get blockFailed() {
-    return this.attempts > this.studyConfig.maxAttempts;
+    return this.attempts + 1 >= this.studyConfig.maxAttempts;
   }
 
   private get lastAnswerCorrect() {
@@ -102,10 +102,6 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
     this.trials = this.createTrials();
     this.prompt(this.startInstructions, false, TRIAL_DELAY_INTERVAL_MS)
       .subscribe(() => {
-        // Uncomment this to start at the probe stage.
-        // this.index = 31;
-        // this.trial = this.trials[this.index];
-
         this.started.next();
         this.nextTrial();
       });

@@ -196,6 +196,11 @@ export class BlockComponent {
   }
 
   nextTrial() {
+    // Uncomment to debug probe
+    // if(this.index === 1) {
+    //   this.index = 32;
+    //   this.trial = this.trials[this.index];
+    // }
     if (this.index === -1) this.startedAt = new Date();
 
     this.trialCounterSvc.increase();
