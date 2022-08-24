@@ -9,26 +9,26 @@ import { CUE_TYPE } from '../study-conditions/cue.constants';
 import { StudyConfig } from './study-config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StudyConfigService {
   constructor(
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
-    private snackBarSvc: SnackBarService
+    private snackBarSvc: SnackBarService,
   ) {
   }
 
   private _config?: StudyConfig;
 
-  get iCannotKnow() {
-    return this.config.iCannotKnow;
-  }
-
   get config(): StudyConfig {
     if (!this._config) throw Error('Config is not defined');
     return this._config;
+  }
+
+  get iCannotKnow() {
+    return this.config.iCannotKnow;
   }
 
   get participantId(): string {
@@ -44,20 +44,21 @@ export class StudyConfigService {
         lessThan: [1, numericValidators1To100],
         same: [1, numericValidators1To100],
         greaterThan: [1, numericValidators1To100],
-        iCannotKnow: [{ value: 1, disabled: iCannotKnowBalanceDisabled }, numericValidators1To100]
+        iCannotKnow: [{ value: 1, disabled: iCannotKnowBalanceDisabled }, numericValidators1To100],
       }),
       maxAttempts: [9, numericValidators1To100],
       repeatBlockWhenProbeTrialWrongCountIs: [3, numericValidators1To12],
       contextualControl: [false, Validators.required],
       cueType: [CUE_TYPE.nonArbitrary, Validators.required],
-      iCannotKnow: [false, Validators.required],
+      iCannotKnow: ['', Validators.required],
       participantId: ['', [Validators.required, Validators.minLength(3)]],
-      trialTimeoutSeconds: [10, [Validators.required, Validators.min(1), Validators.max(1000)]]
+      trialTimeoutSeconds: [10, [Validators.required, Validators.min(1), Validators.max(1000)]],
+      trainingTrialCorrectToAdvance: [3, [Validators.required, Validators.min(0), Validators.max(10)]],
     });
   }
 
   isConfigValid(config: StudyConfig): void {
-    const form = this.createForm(config?.iCannotKnow === false);
+    const form = this.createForm();
     form.patchValue(config);
     if (form.invalid) throw Error('Study configuration params are invalid.');
   }

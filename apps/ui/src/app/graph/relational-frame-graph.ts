@@ -1,6 +1,4 @@
 import { cloneDeep } from 'lodash-es';
-import { getRandomStimulus } from '../study-conditions/get-random-stimuli';
-import { StimulusCase } from '../study-conditions/stimulus-case';
 import { Digraph } from './digraph';
 import { RelationType } from './relation-type';
 import { RelationalEdge } from './relational-edge';

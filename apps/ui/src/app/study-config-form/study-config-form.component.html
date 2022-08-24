@@ -7,7 +7,7 @@
 
       <mat-form-field *ngIf="form.get('participantId') as participantIdCtrl" appearance="outline">
         <mat-label>Participant id</mat-label>
-        <input matInput formControlName="participantId" autoFocus>
+        <input autoFocus formControlName="participantId" matInput>
         <mat-error *ngIf="participantIdCtrl.hasError('required')">
           Participant id is <strong>required</strong>
         </mat-error>
@@ -16,11 +16,19 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-checkbox formControlName="iCannotKnow">I cannot know</mat-checkbox>
+      <mat-form-field appearance="outline">
+        <mat-label>I Cannot Know</mat-label>
+        <mat-select formControlName="iCannotKnow" required>
+          <mat-option value="With I Cannot Know">With I Cannot Know</mat-option>
+          <mat-option value="Without I Cannot Know">Without I Cannot Know</mat-option>
+          <mat-option value="Combined (Without ICK followed by With ICK)">Combined (Without ICK followed by With ICK)
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
       <mat-form-field *ngIf="form.get('maxAttempts') as maxAttemptsCtrl" appearance="outline">
         <mat-label>Max Attempts</mat-label>
-        <input matInput min="1" max="100" type="number" formControlName="maxAttempts">
+        <input formControlName="maxAttempts" matInput max="100" min="1" type="number">
         <mat-error *ngIf="maxAttemptsCtrl.hasError('required')">
           Max Attempts <strong>required</strong>
         </mat-error>
@@ -32,9 +40,12 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="form.get('repeatBlockWhenProbeTrialWrongCountIs') as repeatBlockWhenProbeTrialWrongCountIsCtrl" appearance="outline">
+      <mat-form-field
+        *ngIf="form.get('repeatBlockWhenProbeTrialWrongCountIs') as repeatBlockWhenProbeTrialWrongCountIsCtrl"
+        appearance="outline"
+      >
         <mat-label>Repeat Block When Probe Trials Wrong Count Is</mat-label>
-        <input matInput min="1" max="12" type="number" formControlName="repeatBlockWhenProbeTrialWrongCountIs">
+        <input formControlName="repeatBlockWhenProbeTrialWrongCountIs" matInput max="12" min="1" type="number">
         <mat-error *ngIf="repeatBlockWhenProbeTrialWrongCountIsCtrl.hasError('required')">
           Repeat Block When Probe Trials Wrong Count Is <strong>required</strong>
         </mat-error>
@@ -46,8 +57,8 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Cue type</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Cue Type</mat-label>
         <mat-select formControlName="cueType">
           <mat-option *ngFor="let cueType of cueTypeOptions " [value]="cueType.value">
             {{cueType.viewValue}}
@@ -56,8 +67,8 @@
       </mat-form-field>
 
       <mat-form-field *ngIf="form.get('trialTimeoutSeconds') as trialTimeoutCtrl" appearance="outline">
-        <mat-label>Trial timeout</mat-label>
-        <input matInput min="1" max="1000" type="number" formControlName="trialTimeoutSeconds">
+        <mat-label>Trial Timeout</mat-label>
+        <input formControlName="trialTimeoutSeconds" matInput max="1000" min="1" type="number">
         <span matSuffix>seconds</span>
         <mat-error *ngIf="trialTimeoutCtrl.hasError('required')">
           Trial timeout is <strong>required</strong>
@@ -70,82 +81,99 @@
         </mat-error>
       </mat-form-field>
 
-      <div formGroupName="balance" *ngIf="form.get('balance') as balanceGroup">
-        <div class="mat-h4">Balance</div>
+      <mat-form-field
+        *ngIf="form.get('trainingTrialCorrectToAdvance') as trainingTrialCorrectToAdvanceCtrl"
+        appearance="outline"
+      >
+        <mat-label>Training Trials Correct To Advance</mat-label>
+        <input formControlName="trainingTrialCorrectToAdvance" matInput max="10" min="0" type="number">
+        <mat-error *ngIf="trainingTrialCorrectToAdvanceCtrl.hasError('required')">
+          Training trials correct to advance is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="trainingTrialCorrectToAdvanceCtrl.hasError('min')">
+          Training trials correct to advance must be a <strong>minimum</strong> of 0
+        </mat-error>
+        <mat-error *ngIf="trainingTrialCorrectToAdvanceCtrl.hasError('max')">
+          Training trials correct to advance must be a <strong>maximum</strong> of 10
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field *ngIf="balanceGroup.get('same') as sameCtrl" appearance="outline">
-          <mat-label>Same</mat-label>
-          <input matInput min="1" max="99" type="number" formControlName="same">
-          <mat-error *ngIf="sameCtrl.hasError('required')">
-            Same to is <strong>required</strong>
-          </mat-error>
-          <mat-error *ngIf="sameCtrl.hasError('min')">
-            Same to must be a <strong>minimum</strong> of 1
-          </mat-error>
-          <mat-error *ngIf="sameCtrl.hasError('max')">
-            Same to must be a <strong>maximum</strong> of 99
-          </mat-error>
-        </mat-form-field>
+      <!--      <div formGroupName="balance" *ngIf="form.get('balance') as balanceGroup">-->
+      <!--        <div class="mat-h4">Balance</div>-->
 
-        <mat-form-field *ngIf="balanceGroup.get('lessThan') as lessThanCtrl" appearance="outline">
-          <mat-label>Less than</mat-label>
-          <input matInput min="1" max="99" type="number" formControlName="lessThan">
-          <mat-error *ngIf="lessThanCtrl.hasError('required')">
-            Less than is <strong>required</strong>
-          </mat-error>
-          <mat-error *ngIf="lessThanCtrl.hasError('min')">
-            Less than must be a <strong>minimum</strong> of 1
-          </mat-error>
-          <mat-error *ngIf="lessThanCtrl.hasError('max')">
-            Less than must be a <strong>maximum</strong> of 99
-          </mat-error>
-        </mat-form-field>
+      <!--        <mat-form-field *ngIf="balanceGroup.get('same') as sameCtrl" appearance="outline">-->
+      <!--          <mat-label>Same</mat-label>-->
+      <!--          <input matInput min="1" max="99" type="number" formControlName="same">-->
+      <!--          <mat-error *ngIf="sameCtrl.hasError('required')">-->
+      <!--            Same to is <strong>required</strong>-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="sameCtrl.hasError('min')">-->
+      <!--            Same to must be a <strong>minimum</strong> of 1-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="sameCtrl.hasError('max')">-->
+      <!--            Same to must be a <strong>maximum</strong> of 99-->
+      <!--          </mat-error>-->
+      <!--        </mat-form-field>-->
 
-        <mat-form-field *ngIf="balanceGroup.get('greaterThan') as greaterThanCtrl" appearance="outline">
-          <mat-label>Greater than</mat-label>
-          <input matInput min="1" max="99" type="number" formControlName="greaterThan">
-          <mat-error *ngIf="greaterThanCtrl.hasError('required')">
-            Greater than is <strong>required</strong>
-          </mat-error>
-          <mat-error *ngIf="greaterThanCtrl.hasError('min')">
-            Greater than must be a <strong>minimum</strong> of 1
-          </mat-error>
-          <mat-error *ngIf="greaterThanCtrl.hasError('max')">
-            Greater than must be a <strong>maximum</strong> of 99
-          </mat-error>
-        </mat-form-field>
+      <!--        <mat-form-field *ngIf="balanceGroup.get('lessThan') as lessThanCtrl" appearance="outline">-->
+      <!--          <mat-label>Less than</mat-label>-->
+      <!--          <input matInput min="1" max="99" type="number" formControlName="lessThan">-->
+      <!--          <mat-error *ngIf="lessThanCtrl.hasError('required')">-->
+      <!--            Less than is <strong>required</strong>-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="lessThanCtrl.hasError('min')">-->
+      <!--            Less than must be a <strong>minimum</strong> of 1-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="lessThanCtrl.hasError('max')">-->
+      <!--            Less than must be a <strong>maximum</strong> of 99-->
+      <!--          </mat-error>-->
+      <!--        </mat-form-field>-->
 
-        <mat-form-field *ngIf="balanceGroup.get('iCannotKnow') as iCannotKnowCtrl" appearance="outline">
-          <mat-label>I Cannot Know</mat-label>
-          <input matInput min="1" max="99" type="number" formControlName="iCannotKnow">
-          <mat-error *ngIf="iCannotKnowCtrl.hasError('required')">
-            I Cannot Know is <strong>required</strong>
-          </mat-error>
-          <mat-error *ngIf="iCannotKnowCtrl.hasError('min')">
-            I Cannot Know must be a <strong>minimum</strong> of 1
-          </mat-error>
-          <mat-error *ngIf="iCannotKnowCtrl.hasError('max')">
-            I Cannot Know must be a <strong>maximum</strong> of 99
-          </mat-error>
-        </mat-form-field>
+      <!--        <mat-form-field *ngIf="balanceGroup.get('greaterThan') as greaterThanCtrl" appearance="outline">-->
+      <!--          <mat-label>Greater than</mat-label>-->
+      <!--          <input matInput min="1" max="99" type="number" formControlName="greaterThan">-->
+      <!--          <mat-error *ngIf="greaterThanCtrl.hasError('required')">-->
+      <!--            Greater than is <strong>required</strong>-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="greaterThanCtrl.hasError('min')">-->
+      <!--            Greater than must be a <strong>minimum</strong> of 1-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="greaterThanCtrl.hasError('max')">-->
+      <!--            Greater than must be a <strong>maximum</strong> of 99-->
+      <!--          </mat-error>-->
+      <!--        </mat-form-field>-->
 
-      </div>
+      <!--        <mat-form-field *ngIf="balanceGroup.get('iCannotKnow') as iCannotKnowCtrl" appearance="outline">-->
+      <!--          <mat-label>I Cannot Know</mat-label>-->
+      <!--          <input matInput min="1" max="99" type="number" formControlName="iCannotKnow">-->
+      <!--          <mat-error *ngIf="iCannotKnowCtrl.hasError('required')">-->
+      <!--            I Cannot Know is <strong>required</strong>-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="iCannotKnowCtrl.hasError('min')">-->
+      <!--            I Cannot Know must be a <strong>minimum</strong> of 1-->
+      <!--          </mat-error>-->
+      <!--          <mat-error *ngIf="iCannotKnowCtrl.hasError('max')">-->
+      <!--            I Cannot Know must be a <strong>maximum</strong> of 99-->
+      <!--          </mat-error>-->
+      <!--        </mat-form-field>-->
+
+      <!--      </div>-->
     </form>
 
     <mat-card-actions align="start">
       <button
-        (tap)="start()"
-        color="primary"
+        (tap)="form.valid && start()"
         [disabled]="form.invalid"
+        color="primary"
         mat-button
         type="button"
       >Start
       </button>
 
       <button
-        (tap)="copyLink()"
-        color="primary"
+        (tap)="form.valid && copyLink()"
         [disabled]="form.invalid"
+        color="primary"
         mat-button
         type="button"
       >

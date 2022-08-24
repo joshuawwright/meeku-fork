@@ -25,7 +25,8 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   probeTrialCount = 0;
   probeTrialWithoutFeedbackStart = 32;
   probeWrongCount = 0;
-  sequentialCorrectRequiredToAdvance = 3;
+  sequentialProbeTrialCorrectRequiredToAdvance = 3;
+  sequentialTrainingTrialCorrectRequiredToAdvance = 3;
   startInstructions = 'CLICK TO CONTINUE';
   trainingTrialCount = 0;
 
@@ -57,11 +58,11 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   private get repeatProbeTrial() {
-    return this.probeTrialCount < this.sequentialCorrectRequiredToAdvance;
+    return this.probeTrialCount < this.sequentialProbeTrialCorrectRequiredToAdvance;
   }
 
   private get repeatTrainingTrial() {
-    return this.trainingTrialCount < this.sequentialCorrectRequiredToAdvance && this.index > -1;
+    return this.trainingTrialCount < this.sequentialTrainingTrialCorrectRequiredToAdvance && this.index > -1;
   }
 
   createTrials() {
@@ -86,6 +87,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
 
   ngOnInit(): void {
     this.start();
+    this.sequentialTrainingTrialCorrectRequiredToAdvance = this.studyConfig.trainingTrialCorrectToAdvance;
   }
 
   reset() {
@@ -100,6 +102,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
 
   start() {
     this.trials = this.createTrials();
+
     this.prompt(this.startInstructions, false, TRIAL_DELAY_INTERVAL_MS)
       .subscribe(() => {
         this.started.next();

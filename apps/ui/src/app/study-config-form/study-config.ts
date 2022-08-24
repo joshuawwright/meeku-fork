@@ -5,10 +5,11 @@ export interface StudyConfig {
   balance: BalanceConfig;
   contextualControl: boolean;
   cueType: CueType;
-  iCannotKnow: boolean;
+  iCannotKnow: string;
   repeatBlockWhenProbeTrialWrongCountIs: number;
   maxAttempts: number;
   participantId: string;
   trialTimeoutSeconds: number;
+  trainingTrialCorrectToAdvance: number;
 }
 

@@ -1,15 +1,16 @@
-import {CueType} from '../study-conditions/cue.constants';
+import { CueType } from '../study-conditions/cue.constants';
 
 export interface StudyConfigFlattened {
-  'balance.same': number;
   'balance.greaterThan': number;
   'balance.iCannotKnow': number;
   'balance.lessThan': number;
+  'balance.same': number;
   contextualControl: boolean;
-  repeatBlockWhenProbeTrialWrongCountIs: number;
-  maxAttempts: number;
   cueType: CueType;
-  iCannotKnow: boolean;
+  iCannotKnow: string;
+  maxAttempts: number;
   participantId: string;
+  repeatBlockWhenProbeTrialWrongCountIs: number;
+  trainingTrialCorrectToAdvance: number;
   trialTimeoutSeconds: number;
 }

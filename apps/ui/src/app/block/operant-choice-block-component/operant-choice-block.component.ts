@@ -22,7 +22,7 @@ const lcm = (a: number, b: number) => a * b / gcd(a, b);
   selector: 'operant-choice-block',
   templateUrl: './operant-choice-block.component.html',
   styleUrls: ['./operant-choice-block.component.scss'],
-  animations: []
+  animations: [],
 })
 export class OperantChoiceBlockComponent extends BlockComponent implements OnInit, OnDestroy {
   configBalanceDividedByGcd: Record<CueNonArbitrary, number>|undefined;
@@ -34,7 +34,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
     iCannotKnow: 0,
     red: 0,
     green: 0,
-    blue: 0
+    blue: 0,
   };
   correctShownTargets: Record<CueNonArbitrary, number>|undefined;
   index = -1;
@@ -42,7 +42,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
   name = 'Operant Choice';
   numAllottedTimeouts = 1;
   numTimeouts = 0;
-  startInstructions = 'CLICK TO CONTINUE'
+  startInstructions = 'CLICK TO CONTINUE';
   stimuliComparisonCopies = 2;
   timeout?: NodeJS.Timeout;
 
@@ -51,7 +51,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
     overlaySvc: OverlayService,
     reportSvc: ReportService,
     trialCounterSvc: TrialCounterService,
-    private network5And6Graph: Network5And6Graph
+    private network5And6Graph: Network5And6Graph,
   ) {
     super(dialog, overlaySvc, reportSvc, trialCounterSvc);
   }
@@ -77,7 +77,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
       // Path 2
       comparisonTarget: 24, // greater than or less than
       iCannotKnowTarget: this.studyConfig.iCannotKnow ? 18 : 0,
-      sameTarget: 6
+      sameTarget: 6,
     };
   }
 
@@ -87,7 +87,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
       sequentialCorrectTargetAchieved,
       comparisonTarget,
       iCannotKnowTarget,
-      sameTarget
+      sameTarget,
     } = this.masterCriterion;
     const { greaterThan, iCannotKnow, lessThan, same } = this.correctCount;
     if (this.sequentialCorrect ===
@@ -117,12 +117,12 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
     const { studyConfig } = this; // defined locally so typescript can infer types
     if (!studyConfig) throw Error('Study configuration is undefined');
 
-    this.network5And6Graph.includeRelationsBetweenNetworks = studyConfig.iCannotKnow;
+    this.network5And6Graph.includeRelationsBetweenNetworks = studyConfig.iCannotKnow === 'With I Cannot Know';
 
     // pool network comparisons
     const comparisons: StimuliComparison<RelationalNode>[] = [
       this.network5And6Graph.trained,
-      this.network5And6Graph.mutuallyEntailed
+      this.network5And6Graph.mutuallyEntailed,
     ].flat().concat(studyConfig.iCannotKnow ? this.network5And6Graph.combinatoriallyEntailed : []);
 
     // creates a record of relation type to unique stimuli comparisons
@@ -143,7 +143,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
     const cueMultiplierByStimuli = CUES_NON_ARBITRARY_W_ICK.reduce(
       (acc, cue) => ({
         ...acc,
-        [cue]: cueCountsLeastCommonMultiple / comparisons.filter(comparison => comparison.relation === cue).length
+        [cue]: cueCountsLeastCommonMultiple / comparisons.filter(comparison => comparison.relation === cue).length,
       }),
       {} as Record<CueNonArbitrary, number>);
 
@@ -156,7 +156,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
       same: studyConfig.balance.same / balanceGcd,
       greaterThan: studyConfig.balance.greaterThan / balanceGcd,
       lessThan: studyConfig.balance.lessThan / balanceGcd,
-      iCannotKnow: studyConfig.balance?.iCannotKnow ? studyConfig.balance.iCannotKnow / balanceGcd : 0
+      iCannotKnow: studyConfig.balance?.iCannotKnow ? studyConfig.balance.iCannotKnow / balanceGcd : 0,
     };
 
     const balanceTimesMultiplier: Record<CueNonArbitrary, number> = {
@@ -165,7 +165,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
       greaterThan: (studyConfig.balance.greaterThan * cueMultiplierByStimuli.greaterThan),
       lessThan: (studyConfig.balance.lessThan * cueMultiplierByStimuli.lessThan),
       iCannotKnow: studyConfig.balance?.iCannotKnow ?
-        (studyConfig.balance.iCannotKnow * cueMultiplierByStimuli.iCannotKnow) : 0
+        (studyConfig.balance.iCannotKnow * cueMultiplierByStimuli.iCannotKnow) : 0,
     };
 
     const multiplierGcd = Object.values(balanceTimesMultiplier)
@@ -180,7 +180,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
         this.trials = this.trials.concat(
           cueByStimuli[cue].flat().map(stimuliComparison => ({
             ...stimuliComparison,
-            cueComponentConfigs: randomizedComponentConfigs(studyConfig)
+            cueComponentConfigs: randomizedComponentConfigs(studyConfig),
           })));
       }
     }
@@ -217,7 +217,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
         same: 0,
         greaterThan: 0,
         lessThan: 0,
-        iCannotKnow: 0
+        iCannotKnow: 0,
       };
       while (this.correctShownTargets.same < this.correctCount.same ||
       this.correctShownTargets.greaterThan < this.correctCount.greaterThan ||
@@ -229,7 +229,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
             same: this.correctShownTargets?.same + this.configBalanceDividedByGcd?.same,
             greaterThan: this.correctShownTargets?.greaterThan + this.configBalanceDividedByGcd?.greaterThan,
             lessThan: this.correctShownTargets?.lessThan + this.configBalanceDividedByGcd?.lessThan,
-            iCannotKnow: this.correctShownTargets?.iCannotKnow + this.configBalanceDividedByGcd?.iCannotKnow
+            iCannotKnow: this.correctShownTargets?.iCannotKnow + this.configBalanceDividedByGcd?.iCannotKnow,
           };
         } else {
           throw Error('Config balance has not been created');
@@ -284,7 +284,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
       iCannotKnow: 0,
       red: 0,
       green: 0,
-      blue: 0
+      blue: 0,
     };
     this.index = -1;
     this.correct = 0;
@@ -344,7 +344,7 @@ export class OperantChoiceBlockComponent extends BlockComponent implements OnIni
   start() {
     this.prompt(this.startInstructions, false, TRIAL_DELAY_INTERVAL_MS)
       .subscribe(() => {
-        this.started.next()
+        this.started.next();
         this.nextTrial();
       });
   }
