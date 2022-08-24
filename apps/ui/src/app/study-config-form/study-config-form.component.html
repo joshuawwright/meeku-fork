@@ -16,15 +16,13 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>I Cannot Know</mat-label>
-        <mat-select formControlName="iCannotKnow" required>
-          <mat-option value="With I Cannot Know">With I Cannot Know</mat-option>
-          <mat-option value="Without I Cannot Know">Without I Cannot Know</mat-option>
-          <mat-option value="Combined (Without ICK followed by With ICK)">Combined (Without ICK followed by With ICK)
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-radio-group aria-label="Select an option" class="radio-group" formControlName="iCannotKnow">
+        <mat-radio-button
+          *ngFor="let value of ickValues"
+          [value]="value"
+          class="radio-button"
+        > {{value}}</mat-radio-button>
+      </mat-radio-group>
 
       <mat-form-field *ngIf="form.get('maxAttempts') as maxAttemptsCtrl" appearance="outline">
         <mat-label>Max Attempts</mat-label>

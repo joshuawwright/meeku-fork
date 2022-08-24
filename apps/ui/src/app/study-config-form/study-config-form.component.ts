@@ -19,6 +19,7 @@ import { StudyConfigService } from './study-config.service';
 export class StudyConfigFormComponent {
   cueTypeOptions = CUE_TYPES_OPTIONS;
   form: FormGroup<StudyConfig>;
+  ickValues = ['With I Cannot Know', 'Without I Cannot Know', 'Combined (Without ICK followed by With ICK)'];
 
   constructor(
     private clipboard: Clipboard,

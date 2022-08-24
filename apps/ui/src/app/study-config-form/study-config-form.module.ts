@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AutoFocusModule } from '@known-unknowns-multiple-exemplar-experiment/ng/ui-auto-focus-directive';
@@ -28,7 +29,8 @@ import { StudyConfigFormComponent } from './study-config-form.component';
     ReactiveFormsModule,
     MatCardModule,
     MatDividerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatRadioModule,
   ],
   exports: [
     StudyConfigFormComponent
