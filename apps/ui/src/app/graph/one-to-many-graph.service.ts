@@ -31,12 +31,12 @@ export class OneToManyGraphService extends RelationalFrameGraph {
     this.createKnownNetworks();
   }
 
-  get finalNetworks(): ReadonlyArray<number> {
-    return this.config.iCannotKnow === 'With I Cannot Know' ? this.finalIckNetworks : this.finalKnownNetworks;
+  getFinalNetworks(ick: boolean): ReadonlyArray<number> {
+    return ick ? this.finalIckNetworks : this.finalKnownNetworks;
   }
 
-  get trainingNetworks(): ReadonlyArray<number> {
-    return this.config.iCannotKnow === 'With I Cannot Know' ? this.ickNetworks : this.knownNetworks;
+  getTrainingNetworks(ick: boolean): ReadonlyArray<number> {
+    return ick ? this.ickNetworks : this.knownNetworks;
   }
 
   createIckNetworks() {

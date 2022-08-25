@@ -1,15 +1,14 @@
+import { Condition } from '@known-unknowns-multiple-exemplar-experiment/shared/util-ick';
 import { CueType } from '../study-conditions/cue.constants';
-import { BalanceConfig } from './balance-config';
 
 export interface StudyConfig {
-  balance: BalanceConfig;
+  condition: Condition;
   contextualControl: boolean;
   cueType: CueType;
-  iCannotKnow: string;
-  repeatBlockWhenProbeTrialWrongCountIs: number;
   maxAttempts: number;
   participantId: string;
-  trialTimeoutSeconds: number;
+  repeatBlockWhenProbeTrialWrongCountIs: number;
   trainingTrialCorrectToAdvance: number;
+  trialTimeoutSeconds: number;
 }
 

@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { OneToManyGraphService } from '../../graph/one-to-many-graph.service';
 import { OverlayService } from '../../overlay/overlay.service';
 import { ReportService } from '../../report/report.service';
-import { StudyConfig } from '../../study-config-form/study-config';
 import { Trial } from '../../trial/trial';
 import { TrialCounterService } from '../../trial/trial-counter.service';
 import { BlockComponent } from '../block.component';
@@ -21,6 +20,7 @@ interface Stimulus1And2 {
   styleUrls: ['./one-to-many-block.component.scss'],
 })
 export class OneToManyBlockComponent extends BlockComponent implements OnInit {
+  ick!: boolean;
   name = 'One To Many Block';
   probeTrialCount = 0;
   probeTrialWithoutFeedbackStart = 32;
@@ -66,11 +66,12 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   createTrials() {
-    const trainingTrials = this.getOrderedTrials(this.oneToManyGraph.trainingNetworks, COMPARISONS_WITH_FEEDBACK);
-    const probeTrialsWithFeedback = this.getOrderedTrials(this.oneToManyGraph.finalNetworks,
-      PROBE_COMPARISON_WITH_FEEDBACK);
-    const probeTrialsWithoutFeedback = this.getOrderedTrials(this.oneToManyGraph.finalNetworks,
-      PROBE_COMPARISONS_WITHOUT_FEEDBACK);
+    const trainingNetworks = this.oneToManyGraph.getTrainingNetworks(this.ick);
+    const finalNetworks = this.oneToManyGraph.getFinalNetworks(this.ick);
+
+    const trainingTrials = this.getOrderedTrials(trainingNetworks, COMPARISONS_WITH_FEEDBACK);
+    const probeTrialsWithFeedback = this.getOrderedTrials(finalNetworks, PROBE_COMPARISON_WITH_FEEDBACK);
+    const probeTrialsWithoutFeedback = this.getOrderedTrials(finalNetworks, PROBE_COMPARISONS_WITHOUT_FEEDBACK);
 
     return trainingTrials.concat(probeTrialsWithFeedback, probeTrialsWithoutFeedback);
   }
@@ -118,7 +119,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
 
         trials.push({
           ...stimulusComparison,
-          cueComponentConfigs: randomizedComponentConfigs(this.studyConfig as StudyConfig),
+          cueComponentConfigs: randomizedComponentConfigs(this.studyConfig, this.ick),
         });
       }
     }
@@ -154,7 +155,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   }
 
   private randomizeStimuliPositions() {
-    this.trial.cueComponentConfigs = randomizedComponentConfigs(this.studyConfig);
+    this.trial.cueComponentConfigs = randomizedComponentConfigs(this.studyConfig, this.ick);
   }
 
   private repeatTrial() {

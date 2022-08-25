@@ -16,9 +16,9 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-radio-group aria-label="Select an option" class="radio-group" formControlName="iCannotKnow">
+      <mat-radio-group aria-label="Select an condition" class="radio-group" formControlName="condition">
         <mat-radio-button
-          *ngFor="let value of ickValues"
+          *ngFor="let value of conditions"
           [value]="value"
           class="radio-button"
         > {{value}}</mat-radio-button>

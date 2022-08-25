@@ -2,13 +2,13 @@ import { ComponentType } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { Component, ComponentFactoryResolver, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Condition } from '@known-unknowns-multiple-exemplar-experiment/shared/util-ick';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
 import {
   BlockButtonDialogComponent, BlockButtonDialogData,
 } from '../block/block-button-dialog/block-button-dialog.component';
-import { BlockComponent } from '../block/block.component';
 import { fullScreenDialogWithData } from '../block/full-screen-dialog-with-data';
 import { OneToManyBlockComponent } from '../block/one-to-many-block-component/one-to-many-block.component';
 import { TRIAL_DELAY_INTERVAL_MS } from '../block/trial-animation-delay';
@@ -27,13 +27,7 @@ import { STUDY_INSTRUCTIONS } from './study-instructions';
 })
 export class StudyComponent implements OnInit {
   abandonmentEnabled = false;
-  blocks: ComponentType<BlockComponent>[] = [
-    // PreTestBlockComponent,
-    // ForcedChoiceBlockComponent,
-    // OperantChoiceBlockComponent,
-    OneToManyBlockComponent,
-    // TrainingNetworksBlockComponent
-  ];
+  blocksAndBoolean: { block: ComponentType<OneToManyBlockComponent>, ick: boolean }[] = [];
   complete = false;
   @ViewChild('container', { read: ViewContainerRef, static: true }) container?: ViewContainerRef;
   instructions = STUDY_INSTRUCTIONS;
@@ -49,13 +43,51 @@ export class StudyComponent implements OnInit {
   ) {
   }
 
-  createBlockComponent(blockComponent: ComponentType<BlockComponent>) {
+  addBlocks() {
+    const { config } = this.studyConfigSvc;
+
+    if (config.condition === Condition.withIck) {
+
+      this.blocksAndBoolean = [
+        {
+          block: OneToManyBlockComponent,
+          ick: true,
+        },
+      ];
+
+    } else if (config.condition === Condition.withoutIck) {
+
+      this.blocksAndBoolean = [
+        {
+          block: OneToManyBlockComponent,
+          ick: false,
+        },
+      ];
+
+    } else {
+
+      this.blocksAndBoolean = [
+        {
+          block: OneToManyBlockComponent,
+          ick: false,
+        },
+        {
+          block: OneToManyBlockComponent,
+          ick: true,
+        },
+      ];
+
+    }
+  }
+
+  createBlockComponent(blockComponent: ComponentType<OneToManyBlockComponent>, ick: boolean) {
     if (!this.container) throw Error('Container is undefined');
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(blockComponent);
     this.container.clear();
     const componentRef = this.container.createComponent(componentFactory);
     const blockInstance = componentRef.instance;
     blockInstance.studyConfig = this.studyConfigSvc.config;
+    blockInstance.ick = ick;
 
     blockInstance.started.pipe(first(), untilDestroyed(this)).subscribe(() => this.abandonmentEnabled = true);
 
@@ -63,7 +95,7 @@ export class StudyComponent implements OnInit {
       this.abandonmentEnabled = false;
       if (failed) {
         this.showCompleteDialog('failed');
-      } else if (this.blocks.length) {
+      } else if (this.blocksAndBoolean.length) {
         this.nextBlock();
         this.reportSvc.sendReport('block').then();
       } else {
@@ -75,9 +107,10 @@ export class StudyComponent implements OnInit {
 
   nextBlock() {
     this.showInstructions = false;
-    const block = this.blocks.shift();
-    if (!block) throw Error('Block is undefined');
-    this.createBlockComponent(block);
+    const blockAndIck = this.blocksAndBoolean.shift();
+    if (!blockAndIck) throw Error('Block is undefined');
+    const { block, ick } = blockAndIck;
+    this.createBlockComponent(block, ick);
   }
 
   ngOnInit() {
@@ -100,7 +133,10 @@ export class StudyComponent implements OnInit {
   }
 
   showPreSurvey() {
-    this.surveySvc.showPreSurvey(this.studyConfigSvc.participantId).subscribe(() => this.nextBlock());
+    this.surveySvc.showPreSurvey(this.studyConfigSvc.participantId).subscribe(() => {
+      this.addBlocks();
+      this.nextBlock();
+    });
   }
 
 }

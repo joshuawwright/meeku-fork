@@ -32,6 +32,7 @@
     "@ngneat/reactive-forms": "^2.0.0",
     "@ngneat/until-destroy": "^8.1.4",
     "@nrwl/angular": "12.9.0",
+    "@nrwl/node": "^12.9.0",
     "@types/file-saver": "^2.0.3",
     "@types/flat": "^5.0.2",
     "@types/hammerjs": "^2.0.40",

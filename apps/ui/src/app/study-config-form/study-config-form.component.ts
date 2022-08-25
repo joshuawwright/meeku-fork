@@ -1,6 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CONDITIONS } from '@known-unknowns-multiple-exemplar-experiment/shared/util-ick';
 import { FormGroup } from '@ngneat/reactive-forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { flatten } from 'flat';
@@ -19,7 +20,7 @@ import { StudyConfigService } from './study-config.service';
 export class StudyConfigFormComponent {
   cueTypeOptions = CUE_TYPES_OPTIONS;
   form: FormGroup<StudyConfig>;
-  ickValues = ['With I Cannot Know', 'Without I Cannot Know', 'Combined (Without ICK followed by With ICK)'];
+  conditions = CONDITIONS;
 
   constructor(
     private clipboard: Clipboard,
@@ -41,13 +42,6 @@ export class StudyConfigFormComponent {
   getQueryParamStr() {
     return Object.entries(this.getQueryParamObj()).map(([key, val]) => `${key}=${val}`).join('&');
   }
-
-  // ngOnInit(): void {
-  // this.form.get('iCannotKnow').valueChanges.pipe(
-  //   tap((iCannotKnow) => this.form.get('balance.iCannotKnow')[iCannotKnow ? 'enable' : 'disable']()),
-  //   untilDestroyed(this)
-  // ).subscribe();
-  // }
 
   start() {
     this.router.navigate([`./study`], { queryParams: this.getQueryParamObj() }).then();

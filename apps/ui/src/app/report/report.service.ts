@@ -22,7 +22,7 @@ export class ReportService {
     this.formGroup = this.fb.group({
       studyInstructions: [''],
       participantId: ['', Validators.required],
-      iCannotKnow: ['', Validators.required],
+      condition: ['', Validators.required],
       contextualControl: ['', Validators.required],
       cueType: ['', [Validators.required]],
       trialTimeoutSeconds: [0, Validators.min(1)],
@@ -78,14 +78,10 @@ export class ReportService {
     this.studyConfig = block.studyConfig;
     this.add('studyInstructions', this.reportEntries.length === 0 ? STUDY_INSTRUCTIONS.replaceAll('\n', '') : '');
     this.add('participantId', block.studyConfig.participantId);
-    this.add('iCannotKnow', block.studyConfig.iCannotKnow);
+    this.add('condition', block.studyConfig.condition);
     this.add('contextualControl', block.studyConfig.contextualControl);
     this.add('cueType', block.studyConfig.cueType);
     this.add('trialTimeoutSeconds', block.studyConfig.trialTimeoutSeconds);
-    this.add('balanceEquivalence', block.studyConfig.balance.same);
-    this.add('balanceLessThan', block.studyConfig.balance.lessThan);
-    this.add('balanceGreaterThan', block.studyConfig.balance.greaterThan);
-    this.add('balanceICannotKnow', block.studyConfig.balance.iCannotKnow ?? 0);
     this.add('repeatBlockWhenProbeTrialWrongCountIs', block.studyConfig.repeatBlockWhenProbeTrialWrongCountIs);
     this.add('maxAttempts', block.studyConfig.maxAttempts);
     this.add('blockId', block.name);

@@ -76,6 +76,28 @@
         }
       }
     },
+    "shared-util-ick": {
+      "root": "libs/shared/util-ick",
+      "sourceRoot": "libs/shared/util-ick/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/shared/util-ick/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/util-ick"],
+          "options": {
+            "jestConfig": "libs/shared/util-ick/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "ui": {
       "projectType": "application",
       "root": "apps/ui",

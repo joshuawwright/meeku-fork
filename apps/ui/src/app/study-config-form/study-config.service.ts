@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SnackBarService } from '@known-unknowns-multiple-exemplar-experiment/ng/mat-snack-bar';
+import { Condition } from '@known-unknowns-multiple-exemplar-experiment/shared/util-ick';
 import { FormBuilder, FormGroup } from '@ngneat/reactive-forms';
 import { catchError, first, map, tap } from 'rxjs/operators';
 import { studyConfigFromParams } from '../param-conversions/study-config-from-params';
@@ -27,30 +28,24 @@ export class StudyConfigService {
     return this._config;
   }
 
-  get iCannotKnow() {
-    return this.config.iCannotKnow;
+  get condition() {
+    return this.config.condition;
   }
 
   get participantId(): string {
     return this.config.participantId;
   }
 
-  createForm(iCannotKnowBalanceDisabled = true): FormGroup<StudyConfig> {
+  createForm(): FormGroup<StudyConfig> {
     const numericValidators1To100 = [Validators.required, Validators.min(1), Validators.max(100)];
     const numericValidators1To12 = [Validators.required, Validators.min(1), Validators.max(12)];
 
     return this.fb.group({
-      balance: this.fb.group<StudyConfig['balance']>({
-        lessThan: [1, numericValidators1To100],
-        same: [1, numericValidators1To100],
-        greaterThan: [1, numericValidators1To100],
-        iCannotKnow: [{ value: 1, disabled: iCannotKnowBalanceDisabled }, numericValidators1To100],
-      }),
       maxAttempts: [9, numericValidators1To100],
       repeatBlockWhenProbeTrialWrongCountIs: [3, numericValidators1To12],
       contextualControl: [false, Validators.required],
       cueType: [CUE_TYPE.nonArbitrary, Validators.required],
-      iCannotKnow: ['', Validators.required],
+      condition: ['' as Condition, Validators.required],
       participantId: ['', [Validators.required, Validators.minLength(3)]],
       trialTimeoutSeconds: [10, [Validators.required, Validators.min(1), Validators.max(1000)]],
       trainingTrialCorrectToAdvance: [3, [Validators.required, Validators.min(0), Validators.max(10)]],

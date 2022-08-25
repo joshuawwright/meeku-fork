@@ -1,10 +1,6 @@
 import { StudyConfig } from '../study-config-form/study-config';
 
 export interface ReportEntry {
-  balanceEquivalence: StudyConfig['balance']['same'];
-  balanceGreaterThan: StudyConfig['balance']['greaterThan'];
-  balanceICannotKnow: StudyConfig['balance']['iCannotKnow'];
-  balanceLessThan: StudyConfig['balance']['lessThan'];
   blockAttempts: number;
   maxAttempts: number;
   blockId: string;
@@ -25,7 +21,7 @@ export interface ReportEntry {
   correctResponse: string;
   cueType: StudyConfig['cueType']|'';
   failSafeDuration: string;
-  iCannotKnow: StudyConfig['iCannotKnow']|'';
+  condition: StudyConfig['condition']|'';
   participantId: StudyConfig['participantId'];
   probeAttempts: number;
   retryInstructions: string;
