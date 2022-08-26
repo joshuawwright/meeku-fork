@@ -93,7 +93,7 @@ export class StudyComponent implements OnInit {
 
     blockInstance.completed.pipe(first(), tap(({ failed }) => {
       this.abandonmentEnabled = false;
-      if (failed) {
+      if (failed && this.blocksAndBoolean.length === 0) {
         this.showCompleteDialog('failed');
       } else if (this.blocksAndBoolean.length) {
         this.nextBlock();
