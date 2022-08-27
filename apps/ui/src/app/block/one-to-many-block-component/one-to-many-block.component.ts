@@ -27,7 +27,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   probeWrongCount = 0;
   sequentialProbeTrialCorrectRequiredToAdvance = 3;
   sequentialTrainingTrialCorrectRequiredToAdvance = 3;
-  startInstructions = 'CLICK TO CONTINUE';
+  startInstructions = 'TAKE A BREAK THEN CLICK TO CONTINUE';
   trainingTrialCount = 0;
 
   constructor(

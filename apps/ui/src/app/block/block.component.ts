@@ -36,7 +36,7 @@ export class BlockComponent {
   isVisible = true;
   lastTrialWasColor = false;
   name = 'Block';
-  retryInstructions = 'CLICK TO TRY AGAIN';
+  retryInstructions = 'TAKE A BREAK THEN CLICK TO TRY AGAIN';
   sequentialCorrect = 0;
   startInstructions = 'CLICK TO START';
   @Output() started = new Subject();
