@@ -201,7 +201,7 @@ export class BlockComponent {
     this.trialCounterSvc.increase();
 
     if (this.trialCounterSvc.showColorTrial) {
-      this.showTrial(createColorTrial(), this.feedBackShown ? FEEDBACK_FADE_OUT_DELAY_MS : 0, showCorrectAnswer);
+      this.showTrial(createColorTrial(), this.feedBackShown ? FEEDBACK_FADE_OUT_DELAY_MS : 0, false);
       this.trialCompleted.pipe(first()).subscribe(selected => this.cueSelected(selected));
       this.trialCounterSvc.reset();
     } else if (this.index < this.trials.length) {
@@ -273,11 +273,10 @@ export class BlockComponent {
 
 
   showTrial(trial: Trial, delayMs = FEEDBACK_FADE_OUT_DELAY_MS, showCorrectAnswer: boolean) {
-    console.log(this.trialNum);
     this.lastTrialWasColor = ['red', 'green', 'blue'].includes(trial.relation);
     this.feedBackShown = false;
     this.trial = trial;
-    setTimeout(() => this.trialComponent?.show(trial), delayMs, showCorrectAnswer);
+    setTimeout(() => this.trialComponent?.show(trial, showCorrectAnswer), delayMs);
   }
 
   /***

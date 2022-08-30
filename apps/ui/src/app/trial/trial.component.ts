@@ -21,7 +21,7 @@ export interface TrialCompleted {
 @Component({
   selector: 'trial',
   templateUrl: './trial.component.html',
-  styleUrls: ['./trial.component.scss']
+  styleUrls: ['./trial.component.scss'],
 })
 export class TrialComponent implements AfterViewInit {
   animationDelayMs = TRIAL_ANIMATION_DELAY_MS;
@@ -67,12 +67,11 @@ export class TrialComponent implements AfterViewInit {
         this.secondsInTrial++;
         if (this.secondsInTrial === studyConfig.trialTimeoutSeconds && !this.complete) this.selected();
       }),
-      untilDestroyed(this)
+      untilDestroyed(this),
     ).subscribe();
   }
 
   show(trial: Trial, showCorrectAnswer = true) {
-    console.log(showCorrectAnswer);
     this.overlaySvc.hide();
     if (!this.trialCueComponents) throw Error('Trial cue components are undefined');
     if (!this.trialStimulusComponents) throw Error('Trial stimulus components are undefined');
@@ -87,7 +86,7 @@ export class TrialComponent implements AfterViewInit {
       const component = this.trialCueComponents.get(i) as TrialCueComponent;
 
       component.set(config).then();
-      component.correct = showCorrectAnswer && trial.relation === config?.value
+      component.correct = showCorrectAnswer && trial.relation === config?.value;
     }
   };
 }
