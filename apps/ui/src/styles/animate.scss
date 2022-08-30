@@ -9,7 +9,7 @@
  */
 :root {
     --animate-duration: 1s;
-    --animate-delay: 1s;
+    --animate-delay: 2s;
     --animate-repeat: 1;
 }
 .animate__animated {
@@ -412,6 +412,20 @@
         transform: translate3d(0, 10px, 0);
     }
 }
+@keyframes delay-animation {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    50.01% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
+}
 @keyframes shakeY {
     from,
     to {
@@ -436,6 +450,10 @@
         transform: translate3d(0, 10px, 0);
     }
 }
+.shakeY {
+    animation: shakeY 1500ms;
+}
+
 .animate__shakeY {
     -webkit-animation-name: shakeY;
     animation-name: shakeY;

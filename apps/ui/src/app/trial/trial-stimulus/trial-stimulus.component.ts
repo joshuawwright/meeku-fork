@@ -24,7 +24,7 @@ export class TrialStimulusComponent {
 
   constructor(private deviceDetectorSvc: DeviceDetectorService) {}
 
-  async set(cue: string) {
+  async setCue(cue: string) {
     this.animate = 'fade-out';
     // This delay prevents the cues from changing mid animation.
     await timer(FADE_OUT_DURATION_MS).toPromise();

@@ -135,11 +135,11 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
     if (this.repeatBlock) {
       this.restart();
     } else if (this.repeatProbeTrial) {
-      this.repeatTrial();
+      this.repeatTrial(false);
     } else {
       this.probeTrialCount = 0;
       this.index++;
-      super.nextTrial();
+      super.nextTrial(false);
     }
   }
 
@@ -158,9 +158,9 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
     this.trial.cueComponentConfigs = randomizedComponentConfigs(this.studyConfig, this.ick);
   }
 
-  private repeatTrial() {
+  private repeatTrial(showCorrect = false) {
     this.randomizeStimuliPositions();
-    super.nextTrial();
+    super.nextTrial(showCorrect);
   }
 
   private restart() {

@@ -71,15 +71,23 @@ export class TrialComponent implements AfterViewInit {
     ).subscribe();
   }
 
-  show(trial: Trial) {
+  show(trial: Trial, showCorrectAnswer = true) {
+    console.log(showCorrectAnswer);
     this.overlaySvc.hide();
     if (!this.trialCueComponents) throw Error('Trial cue components are undefined');
     if (!this.trialStimulusComponents) throw Error('Trial stimulus components are undefined');
     setTimeout(() => this.startedAt = new Date(), TRIAL_ANIMATION_DELAY_MS.cues[0]);
     this.complete = false;
     this.setTimer();
-    for (const [i, node] of trial.stimuli.entries()) this.trialStimulusComponents.get(i)?.set(node.value);
-    for (let i = 0; i < this.trialCueComponents.length; i++) this.trialCueComponents.get(i)?.set(
-      trial.cueComponentConfigs[i]);
+    for (const [i, node] of trial.stimuli.entries()) {
+      this.trialStimulusComponents.get(i)?.setCue(node.value);
+    }
+    for (let i = 0; i < this.trialCueComponents.length; i++) {
+      const config = trial.cueComponentConfigs[i];
+      const component = this.trialCueComponents.get(i) as TrialCueComponent;
+
+      component.set(config).then();
+      component.correct = showCorrectAnswer && trial.relation === config?.value
+    }
   };
 }
