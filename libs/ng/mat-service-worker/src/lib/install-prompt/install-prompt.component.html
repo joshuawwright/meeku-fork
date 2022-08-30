@@ -1,0 +1,18 @@
+<div id="install-prompt">
+  <img height="24px" src="assets/logo.svg" />
+  <div style="font-weight: 500;">Multiple Exemplar Experiment - KU</div>
+  <button (click)="close()" [style.margin-left]="'auto'" mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div>Run experiments</div>
+
+<button
+  (click)="installPwa()"
+  [style.float]="'right'"
+  color="primary"
+  mat-button
+>
+  ADD TO HOME SCREEN
+</button>

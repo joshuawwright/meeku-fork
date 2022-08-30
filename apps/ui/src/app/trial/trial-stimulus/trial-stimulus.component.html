@@ -1,0 +1,10 @@
+<div
+  [@fadeIn]="{value: animate === 'fade-in',  params: { delay: animationDelay }}"
+  [@fadeOut]="animate === 'fade-out'"
+  class="trial-item dynamic-text"
+  [style.backgroundImage]="backgroundImage"
+>
+  {{cue}}
+</div>
+
+

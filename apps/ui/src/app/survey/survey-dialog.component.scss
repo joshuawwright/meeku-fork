@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  padding: 16px;
+}
+
+iframe {
+  height: Calc(100vh - 164px);
+  width: Calc(100vw - 32px);
+}
