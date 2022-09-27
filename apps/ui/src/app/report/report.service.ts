@@ -17,6 +17,7 @@ export class ReportService {
   formGroup: FormGroup<ReportEntry>;
   reportEntries: ReportEntry[] = [];
   studyConfig?: StudyConfig;
+  prolificId = '';
 
   constructor(private fb: FormBuilder, private studyConfigService: StudyConfigService) {
     this.formGroup = this.fb.group({
@@ -144,7 +145,7 @@ export class ReportService {
     const name = `MEEKU - ${participantId}.csv`;
 
     const blob = new Blob([
-      status + CRLF + Object.keys(this.formGroup.value).join(';') + CRLF + report,
+      this.prolificId + CRLF + status + CRLF + Object.keys(this.formGroup.value).join(';') + CRLF + report,
     ], { type: 'text/csv' });
     const content = await this.blobToBase64(blob);
 

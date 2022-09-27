@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { InjectionToken, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { IdDialogModule } from '@known-unknowns-multiple-exemplar-experiment/ng/ui-id-dialog';
 import { BlockModule } from '../block/block.module';
 import { OneToManyBlockModule } from '../block/one-to-many-block-component/one-to-many-block.module';
 import { Network1And2Graph } from '../graph/network-1-and-2-graph';
@@ -26,6 +27,7 @@ export const STIMULUS_CASE = new InjectionToken('Stimulus case');
   imports: [
     BlockModule,
     CommonModule,
+    IdDialogModule,
     MatButtonModule,
     MatCardModule,
     OneToManyBlockModule,

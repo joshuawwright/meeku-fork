@@ -24,6 +24,9 @@
       "@known-unknowns-multiple-exemplar-experiment/ng/ui-auto-focus-directive": [
         "libs/ng/ui-auto-focus-directive/src/index.ts"
       ],
+      "@known-unknowns-multiple-exemplar-experiment/ng/ui-id-dialog": [
+        "libs/ng/ui-id-dialog/src/index.ts"
+      ],
       "@known-unknowns-multiple-exemplar-experiment/shared/util-ick": [
         "libs/shared/util-ick/src/index.ts"
       ]

@@ -16,7 +16,7 @@ export const TRIAL_ANIMATION_DELAY_MS: {
   cues: number[]
 } = {
   stimuli: [TRIAL_DELAY_INTERVAL_MS, TRIAL_DELAY_INTERVAL_MS * 2],
-  cues: Array(5).fill(TRIAL_DELAY_INTERVAL_MS * 3)
+  cues: Array(4).fill(TRIAL_DELAY_INTERVAL_MS * 3)
 };
 
 /**

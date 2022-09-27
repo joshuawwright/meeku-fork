@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Welcome</h1>
+<div mat-dialog-content>
+  <p>Please enter your id to continue.</p>
+  <mat-form-field appearance="fill" floatLabel="always" class="w-100">
+    <mat-label>Prolific Id</mat-label>
+    <input [formControl]="idControl" matInput>
+    <mat-error>Id is required</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button [disabled]="idControl.invalid" [mat-dialog-close]="idControl.value" mat-button>OK</button>
+</div>

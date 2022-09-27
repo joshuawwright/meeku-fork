@@ -2,6 +2,7 @@ import { ComponentType } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { Component, ComponentFactoryResolver, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { IdDialogComponent } from '@known-unknowns-multiple-exemplar-experiment/ng/ui-id-dialog';
 import { Condition } from '@known-unknowns-multiple-exemplar-experiment/shared/util-ick';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
@@ -114,7 +115,11 @@ export class StudyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.studyConfigSvc.loadStudyConfigFromParams().then();
+
+    this.dialog.open(IdDialogComponent, { disableClose: true }).afterClosed().pipe(
+      tap((id) => this.reportSvc.prolificId = id),
+      switchMap(() => this.studyConfigSvc.loadStudyConfigFromParams()),
+    ).subscribe();
   }
 
   showCompleteDialog(status: ReportStatus) {

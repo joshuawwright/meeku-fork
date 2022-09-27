@@ -76,6 +76,31 @@
         }
       }
     },
+    "ng-ui-id-dialog": {
+      "projectType": "library",
+      "root": "libs/ng/ui-id-dialog",
+      "sourceRoot": "libs/ng/ui-id-dialog/src",
+      "prefix": "known-unknowns-multiple-exemplar-experiment",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/ng/ui-id-dialog"],
+          "options": {
+            "jestConfig": "libs/ng/ui-id-dialog/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/ng/ui-id-dialog/src/**/*.ts",
+              "libs/ng/ui-id-dialog/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "shared-util-ick": {
       "root": "libs/shared/util-ick",
       "sourceRoot": "libs/shared/util-ick/src",
