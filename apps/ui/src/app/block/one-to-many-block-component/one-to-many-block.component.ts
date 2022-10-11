@@ -146,7 +146,7 @@ export class OneToManyBlockComponent extends BlockComponent implements OnInit {
   private nextTrainingTrial() {
     this.trainingTrialCount = this.lastAnswerCorrect ? this.trainingTrialCount + 1 : 0;
     if (this.repeatTrainingTrial) {
-      this.repeatTrial();
+      this.repeatTrial(true);
     } else {
       this.trainingTrialCount = 0;
       this.index++;

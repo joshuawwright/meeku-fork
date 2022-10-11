@@ -15,7 +15,7 @@ export class SurveyService {
 
     return this.dialog.open(SurveyDialogComponent, fullScreenDialogWithData<SurveyDialogData>(
       {
-        title: `Post Survey | Participant Id = ${participantId}`,
+        title: `Post Survey | Completion Code = ${participantId}`,
         survey: 'post',
       })).afterClosed();
   }

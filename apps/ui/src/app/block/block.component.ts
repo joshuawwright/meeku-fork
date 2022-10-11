@@ -271,7 +271,6 @@ export class BlockComponent {
     );
   }
 
-
   showTrial(trial: Trial, delayMs = FEEDBACK_FADE_OUT_DELAY_MS, showCorrectAnswer: boolean) {
     this.lastTrialWasColor = ['red', 'green', 'blue'].includes(trial.relation);
     this.feedBackShown = false;
